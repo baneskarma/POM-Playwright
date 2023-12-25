@@ -1,4 +1,4 @@
-import { chromium, Page } from '@playwright/test';
+import { chromium } from '@playwright/test';
 //import { test, expect, browser, context, page } from './Fixtures.mjs';
 
 import { LoginPage } from '../pages/login-page/LoginPage.js';
