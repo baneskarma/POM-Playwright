@@ -39,7 +39,8 @@ export default defineConfig({
   use: {
 
     // Video options: 'on', 'off', 'retain-on-failure', 'on-first-retry'
-    video: "off",    
+    video: "off", 
+    screenshot: 'only-on-failure',   
 
     launchOptions:{
     slowMo: 500
