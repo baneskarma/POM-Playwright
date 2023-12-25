@@ -20,7 +20,7 @@ export const beforeAllTests = async() => {
 
     // set browser
     let browser = await chromium.launch({
-        headless: false,
+        headless: true,
         ignoreDefaultArgs: ['--enable-features=NetworkService'],
         args: ['--disable-popup-blocking'],
         permissions: ['geolocation'],
