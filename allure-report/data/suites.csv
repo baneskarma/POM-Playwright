@@ -1,0 +1,3 @@
+"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
+"failed","Fri Dec 22 12:59:58 CET 2023","Fri Dec 22 13:01:46 CET 2023","108536","edge","TestSuite.spec.js","Test Suite","","","Add '10% Discount - 6 months' to Residential account",""
+"passed","Fri Dec 22 12:56:04 CET 2023","Fri Dec 22 12:59:28 CET 2023","204901","edge","TestSuite.spec.js","Test Suite","","","Order '5G Network - Voice' through business account(B2B)",""

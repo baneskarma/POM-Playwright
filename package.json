@@ -1,0 +1,18 @@
+{
+  "name": "pom-playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {},
+  "keywords": [],
+  "author": "Blagoja",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.40.1",
+    "allure-playwright": "^2.9.2"
+  },
+  "dependencies": {
+    "playwright-webkit": "^1.40.1"
+  }
+}
