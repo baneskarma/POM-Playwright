@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 /**
  * <b>PAGES : Vlocity Product Console</b> [Home]: Home Page

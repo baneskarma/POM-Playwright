@@ -9,6 +9,16 @@ import { CreateOrder } from '../pages/orders-page/CreateOrder.js';
 import { VlocityProductConsole } from '../pages/vlocity-product-console/VPCHomepage.js';
 
 
+let page;
+let browser;
+let context;
+export let loginPage;
+export let homePage;
+export let createAccount;
+export let updateAccount;
+export let createOrder;
+export let vlocityProductConsole;
+
 /**
  * <b>[Method]</b> - Method to use in test.beforeAll() <br>
  * <br>
@@ -19,8 +29,8 @@ export const beforeAllTests = async() => {
 //export async function beforeAllTests() {
 
     // set browser
-    let browser = await chromium.launch({
-        headless: true,
+    browser = await chromium.launch({
+        headless: false,
         ignoreDefaultArgs: ['--enable-features=NetworkService'],
         args: ['--disable-popup-blocking'],
         permissions: ['geolocation'],
@@ -37,7 +47,7 @@ export const beforeAllTests = async() => {
     });
 
     // set browser context
-    let context = await browser.newContext(
+    context = await browser.newContext(
     {   
         recordVideo: {
             dir: 'videos/',
@@ -46,7 +56,7 @@ export const beforeAllTests = async() => {
     });
 
     // set page
-    let page = await context.newPage();
+    page = await context.newPage();
 
     // set browser width height and position
     let width = 1528;
@@ -54,15 +64,15 @@ export const beforeAllTests = async() => {
     await page.setViewportSize({ width: width, height: height });
     
     // set objects of classes
-    //pageObjects();
-    // loginPage = new LoginPage(page);
-    // homePage = new HomePage(page);
-    // createAccount = new CreateAccount(page);
-    // updateAccount = new UpdateAccount(page);
-    // createOrder = new CreateOrder(page);
-    // vlocityProductConsole = new VlocityProductConsole(page);
 
-    return {page, context};
+    loginPage = new LoginPage(page);
+    homePage = new HomePage(page);
+    createAccount = new CreateAccount(page);
+    updateAccount = new UpdateAccount(page);
+    createOrder = new CreateOrder(page);
+    vlocityProductConsole = new VlocityProductConsole(page);
+
+    //return {page, context};
 };
 
 /**
@@ -86,20 +96,19 @@ export const beforeEachTest = async() => {
  */
 export const afterAllTests = async() => {
 //export async function afterAllTests() {
-    await p.close();
-    await c.close();
+    await page.close();
+    await context.close();
 };
 
 
 
-const pc = await beforeAllTests();
-const p = pc.page;
-const c = pc.context;
+// const pc = await beforeAllTests();
+// const p = pc.page;
+// const c = pc.context;
 
-export const loginPage = new LoginPage(p);
-export const homePage = new HomePage(p);
-export const createAccount = new CreateAccount(p);
-export const updateAccount = new UpdateAccount(p);
-export const createOrder = new CreateOrder(p);
-export const vlocityProductConsole = new VlocityProductConsole(p);
-
+// export const loginPage = new LoginPage(p);
+// export const homePage = new HomePage(p);
+// export const createAccount = new CreateAccount(p);
+// export const updateAccount = new UpdateAccount(p);
+// export const createOrder = new CreateOrder(p);
+// export const vlocityProductConsole = new VlocityProductConsole(p);

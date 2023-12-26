@@ -1,9 +1,9 @@
 name: Playwright Tests
 on:
   push:
-    branches: [ main, master ]
+    branches: [ blagoja, master ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ blagoja, master ]
 jobs:
   test:
     timeout-minutes: 60
@@ -18,10 +18,10 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --project=edge
+      run: xvfb-run npx playwright test --project=edge
     - uses: actions/upload-artifact@v3
       if: always()
       with:
         name: playwright-report
-        path: playwright-report/
+        path: allure-report/
         retention-days: 30
