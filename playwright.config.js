@@ -13,14 +13,14 @@ import { defineConfig, devices } from '@playwright/test';
 // module.exports = defineConfig({
 export default defineConfig({
   testDir: './test-runner',
-    /* Maximum time one test can run for. */
-    timeout: 150 * 1000,
-    expect: {
-      /**
-       * Maximum time expect() should wait for the condition to be met.
-       */
-      timeout: 15 * 1000
-    },
+  /* Maximum time one test can run for. */
+  timeout: 150 * 1000,
+  expect: {
+    /**
+     * Maximum time expect() should wait for the condition to be met.
+     */
+    timeout: 15 * 1000
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
