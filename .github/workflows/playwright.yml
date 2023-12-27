@@ -6,11 +6,11 @@ on:
   schedule:
     - cron: '30 9 * * 0-4'
 
-  # push:
-  #   branches: [ blagoja, main ]
+  push:
+    branches: [ blagoja, main ]
 
-  # pull_request:
-  #   branches: [ blagoja, main ] 
+  pull_request:
+    branches: [ blagoja, main ] 
 
 jobs:
   # setup:
