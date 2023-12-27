@@ -7,10 +7,10 @@ on:
     - cron: '30 9 * * 0-4'
 
   push:
-    branches: [ blagoja, master ]
+    branches: [ blagoja, main ]
 
   pull_request:
-    branches: [ blagoja, master ] 
+    branches: [ blagoja, main ] 
 
 jobs:
   # setup:
