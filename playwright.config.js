@@ -107,7 +107,7 @@ export default defineConfig({
     //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
-  //globalTeardown: "./tests-configuration/GlobalTeardown",
+  globalTeardown: "./tests-configuration/GlobalTeardown",
   globalSetup: "./tests-configuration/GlobalSetup",
   /* Run your local dev server before starting the tests */
   // webServer: {

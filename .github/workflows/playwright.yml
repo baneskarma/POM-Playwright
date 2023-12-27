@@ -9,6 +9,9 @@ on:
   
   workflow_dispatch:
 
+  schedule:
+    - cron: '30 9 * * 0-4'
+
 jobs:
   # setup:
   #   runs-on: ubuntu-latest
