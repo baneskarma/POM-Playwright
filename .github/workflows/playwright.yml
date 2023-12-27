@@ -104,6 +104,7 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
+          force_orphan: true
 
       # - name: Open Allure Report
       #   run: allure open allure-report    
