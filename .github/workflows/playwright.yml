@@ -58,7 +58,7 @@ jobs:
         run: npm install -g allure-commandline --save-dev
 
       - name: Run Playwright tests
-        run: xvfb-run npx playwright test --headless=false --project=chromium || true
+        run: xvfb-run npx playwright test --project=chromium || true
       
       # - uses: actions/upload-artifact@v3
       #   if: always()
@@ -92,7 +92,7 @@ jobs:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
           PUBLISH_DIR: allure-history
-          
+
       # - name: Download Playwright report artifact
       #   uses: actions/download-artifact@v3
       #   with:
