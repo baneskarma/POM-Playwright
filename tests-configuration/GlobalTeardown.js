@@ -10,9 +10,8 @@ export default async function globalTeardown() {
   try {
     // check if running on a CI environment
     const isCI = process.env.CI === 'true';
-
+    execSync('allure generate allure-results --clean -o allure-report', { stdio: 'inherit' });
     if(!isCI) {
-      execSync('allure generate allure-results --clean -o allure-report', { stdio: 'inherit' });
       execSync('allure open allure-report', { stdio: 'inherit' });
     }
   } catch (error) {
