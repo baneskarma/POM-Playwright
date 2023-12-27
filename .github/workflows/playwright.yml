@@ -1,5 +1,5 @@
 name: Playwright Tests
-# run
+
 on:
   workflow_dispatch: # Trigger the workflow manually
 
@@ -67,6 +67,11 @@ jobs:
       #     name: playwright-report
       #     path: allure-results/
       #     retention-days: 30
+      
+      # - name: Clean up gh-pages branch
+      #   run: |
+      #     git checkout -f gh-pages
+      #     git rm -rf
 
       # - name: Download Playwright report artifact
       #   uses: actions/download-artifact@v3
