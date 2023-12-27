@@ -67,14 +67,11 @@ jobs:
       #     name: playwright-report
       #     path: allure-results/
       #     retention-days: 30
-<<<<<<< HEAD
-      
-      - name: Clean up gh-pages branch (optional)
-        run: |
-          git checkout -f gh-pages
-          git rm -rf .
-=======
->>>>>>> 902b933182b306683ab8e25e2e0a023c941cfc0b
+
+      # - name: Clean up gh-pages branch
+      #   run: |
+      #       git checkout -f gh-pages
+      #       git rm -rf
 
       # - name: Download Playwright report artifact
       #   uses: actions/download-artifact@v3
