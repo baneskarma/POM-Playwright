@@ -1,5 +1,6 @@
 name: Playwright Tests
 
+
 on:
   workflow_dispatch: # Trigger the workflow manually
 
@@ -59,8 +60,15 @@ jobs:
 
       - name: Run Playwright tests
         run: xvfb-run npx playwright test --project=chromium || true
-      
+
       # - name: Upload Allure Results
+      # uses: actions/upload-artifact@v4
+      # if: always()
+      # with:
+      #   name: playwright-report
+      #   path: allure-results/
+      #   retention-days: 30
+
       #   uses: actions/upload-artifact@v4
       #   if: always()
       #   with:
@@ -70,6 +78,8 @@ jobs:
       
       # - name: Clean up gh-pages branch
       #   run: |
+      #      git checkout -f gh-pages
+      #      git rm -rf
       #     git checkout -f gh-pages
       #     git rm -rf
 
@@ -100,11 +110,14 @@ jobs:
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
-        env:
-          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PUBLISH_BRANCH: gh-pages
-          PUBLISH_DIR: allure-history
-          force_orphan: true
+        with: 
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
+        # env:
+        #   PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #   PUBLISH_BRANCH: gh-pages
+        #   PUBLISH_DIR: allure-history
 
       # - name: Open Allure Report
       #   run: allure open allure-report    
