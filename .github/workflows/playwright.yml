@@ -70,8 +70,10 @@ jobs:
       - name: Generate Allure Report
         run: allure generate allure-results --clean -o allure-report
 
-      - name: Open Allure Report URL
-        run: echo "Allure Report URL: file://$(pwd)/allure-report/index.html"
+      - name: Open Allure Report
+        run: |
+          allure-report-url="file://$(pwd)/allure-report/index.html"
+          echo "Allure Report URL: $allure-report-url"
 
       # - name: Open Allure Report
       #   run: allure open allure-report    
