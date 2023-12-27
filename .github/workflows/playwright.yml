@@ -3,8 +3,11 @@ name: Playwright Tests
 on:
   push:
     branches: [ blagoja, master ]
+
   pull_request:
     branches: [ blagoja, master ]
+  
+  workflow_dispatch:
 
 jobs:
   # setup:
@@ -51,32 +54,32 @@ jobs:
       - name: Run Playwright tests
         run: xvfb-run npx playwright test --project=edge || true
       
-      # - uses: actions/upload-artifact@v3
-      #   if: always()
-      #   with:
-      #     name: playwright-report
-      #     path: allure-report/
-      #     retention-days: 30
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: allure-report/
+          retention-days: 30
 
       - name: Install Allure CLI
         run: npm install -g allure-commandline --save-dev
 
-      # - name: Download Playwright report artifact
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: playwright-report
-      #     path: allure-report/
-
       - name: Generate Allure Report
         run: allure generate allure-results --clean -o allure-report
 
-      - name: Open Allure Report
-        run: |
-          allure-report-url="file://$(pwd)/allure-report/index.html"
-          echo "Allure Report URL: $allure-report-url"
+      - name: Download Playwright report artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: playwright-report
+          path: allure-report/
 
       # - name: Open Allure Report
-      #   run: allure open allure-report    
+      #   run: |
+      #     allure-report-url="file://$(pwd)/allure-report/index.html"
+      #     echo "Allure Report URL: $allure-report-url"
+
+      - name: Open Allure Report
+        run: allure open allure-report    
 
   # allure-report:
   #   runs-on: ubuntu-latest
