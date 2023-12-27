@@ -6,11 +6,11 @@ on:
   schedule:
     - cron: '30 9 * * 0-4'
 
-  push:
-    branches: [ blagoja, main ]
+  # push:
+  #   branches: [ blagoja, main ]
 
-  pull_request:
-    branches: [ blagoja, main ] 
+  # pull_request:
+  #   branches: [ blagoja, main ] 
 
 jobs:
   # setup:
@@ -33,7 +33,7 @@ jobs:
     steps:
     # - name: Install Allure
     #   run: sudo apt-add-repository ppa:qameta/allure -y && sudo apt-get update -y && sudo apt-get install allure -y 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: 18
@@ -59,9 +59,23 @@ jobs:
 
       - name: Run Playwright tests
         run: xvfb-run npx playwright test --project=chromium || true
+      
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: allure-results/
+          retention-days: 30
+
+      - name: Download Playwright report artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: playwright-report
+          path: allure-results/
 
       - name: Get Allure history
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         if: always()
         continue-on-error: true
         with:
@@ -69,7 +83,7 @@ jobs:
           path: gh-pages
 
       - name: Test marketplace action
-        uses: simple-elf/allure-report-action@master
+        uses: simple-elf/allure-report-action@v1.7
         if: always()
         id: allure-report
         with:
@@ -80,7 +94,7 @@ jobs:
 
       - name: Deploy report to Github Pages
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.9.3
         env:
           PERSONAL_TOKEN: ${{ secrets.GH_TOKEN }}
           PUBLISH_BRANCH: gh-pages
