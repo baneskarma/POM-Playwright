@@ -58,7 +58,7 @@ jobs:
         run: npm install -g allure-commandline --save-dev
 
       - name: Run Playwright tests
-        run: xvfb-run npx playwright test --headless=false --project=chromium || true
+        run: xvfb-run npx playwright test --project=chromium || true
       
       # - uses: actions/upload-artifact@v3
       #   if: always()
@@ -87,7 +87,7 @@ jobs:
 
       - name: Deploy report to Github Pages
         if: always()
-        uses: peaceiris/actions-gh-pages@v2
+        uses: peaceiris/actions-gh-pages@v3
         env:
           PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages
