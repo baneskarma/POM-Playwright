@@ -8,8 +8,13 @@ import { execSync } from 'child_process';
  */
 export default async function globalTeardown() {
   try {
-    execSync('allure generate allure-results --clean -o allure-report', { stdio: 'inherit' });
-    execSync('allure open allure-report', { stdio: 'inherit' });
+    // check if running on a CI environment
+    const isCI = process.env.CI === 'true';
+
+    if(!isCI) {
+      execSync('allure generate allure-results --clean -o allure-report', { stdio: 'inherit' });
+      execSync('allure open allure-report', { stdio: 'inherit' });
+    }
   } catch (error) {
     console.error(error);
   }
