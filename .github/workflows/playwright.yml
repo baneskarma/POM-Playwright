@@ -1,6 +1,6 @@
 name: Playwright Tests
 
-# run
+# run 2
 on:
   workflow_dispatch: # Trigger the workflow manually
 
