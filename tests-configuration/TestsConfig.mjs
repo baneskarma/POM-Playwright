@@ -34,16 +34,6 @@ export const beforeAllTests = async() => {
         ignoreDefaultArgs: ['--enable-features=NetworkService'],
         args: ['--disable-popup-blocking'],
         permissions: ['geolocation'],
-        async handleAlertClick() {
-          await LightningAlert.open({
-            message: "this is the alert message",
-            variant: "header", // if headerless, theme not applicable
-            theme: "default", 
-            label: "Error", // this is the header text
-          });
-          //Alert has been closed
-          
-        }
     });
 
     // set browser context
