@@ -9,7 +9,7 @@ export class UpdateAccount {
             this.page = page;
             // searchAccount
             this.listView = page.getByRole('button', { name: 'Select a List View: Accounts' });
-            this.allAccounts = page.getByRole('option', { name: 'All Accounts' });
+            this.allAccounts = page.getByRole('option', { name: 'New This Week' });
             this.searchBar = page.getByPlaceholder('Search this list...');
             this.searchedAccount;
             this.accountNameVerification;
