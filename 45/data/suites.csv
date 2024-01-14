@@ -1,7 +1,0 @@
-"Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Wed Dec 27 22:05:39 GMT 2023","Wed Dec 27 22:07:35 GMT 2023","116220","chromium","TestSuite.spec.js","Test Suite","","","Add 'Apple iPhone 7' to consumer account(B2C)",""
-"broken","Wed Dec 27 22:05:35 GMT 2023","Wed Dec 27 22:08:57 GMT 2023","201860","chromium","TestSuite.spec.js","Test Suite","","","Order '5G Network - Voice' through business account(B2B)",""
-"passed","Wed Dec 27 22:05:45 GMT 2023","Wed Dec 27 22:07:52 GMT 2023","126974","chromium","TestSuite.spec.js","Test Suite","","","Add '10% Discount - 6 months' to Residential account",""
-"passed","Wed Dec 27 22:03:34 GMT 2023","Wed Dec 27 22:04:55 GMT 2023","81376","chromium","TestSuite.spec.js","Test Suite","","","Verify details of product '5G Network - ISP'",""
-"passed","Wed Dec 27 22:03:39 GMT 2023","Wed Dec 27 22:05:03 GMT 2023","83702","chromium","TestSuite.spec.js","Test Suite","","","Verify details of product '10Times 10GB National 150kr'",""
-"passed","Wed Dec 27 22:01:50 GMT 2023","Wed Dec 27 22:03:46 GMT 2023","115847","chromium","TestSuite.spec.js","Test Suite","","","Verify details of product '5G Network - Voice'",""
