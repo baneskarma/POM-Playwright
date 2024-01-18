@@ -29,7 +29,7 @@ export default defineConfig({
   //retries: process.env.CI ? 2 : 0,
   retries: 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 6 : 3,
+  workers: process.env.CI ? 7 : 4,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     // ['html'],
@@ -43,7 +43,7 @@ export default defineConfig({
     screenshot: 'only-on-failure',   
 
     launchOptions:{
-    slowMo: 500
+      slowMo: 500
     },
 
     // Maximum time each action such as click() can take. Defaults to 0

@@ -8,7 +8,11 @@ import { execSync } from 'child_process';
  */
 export default async function globalSetup() {
   try {
-    execSync('rm -rf allure-results && rm -rf videos', { stdio: 'inherit' });
+    // check if running on a CI environment
+    const isCI = process.env.CI === 'true';
+    if(!isCI) {
+      execSync('rm -rf allure-results && rm -rf videos', { stdio: 'inherit' });
+    };
   } catch (error) {
     console.error(error);
   }

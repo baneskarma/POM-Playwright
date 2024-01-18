@@ -1,3 +1,4 @@
+import { allure } from 'allure-playwright';
 import { homePage, createAccount, createOrder } from '../tests-configuration/TestsConfig.mjs';
 //import { homePage, createAccount, createOrder } from '../tests-configuration/Fixtures.js';
 import { expect, test } from '@playwright/test';
@@ -18,7 +19,10 @@ import { expect, test } from '@playwright/test';
  * 6. Submit order and check if discount is in the account. <br>
  */
 export async function add10PercentDiscount6MonthsToResidential() {
-    test("Add '10% Discount - 6 months' to Residential account", async (/**{ homePage, createAccount, createOrder}*/) => {
+    test("Add10PercentDiscount6MonthsToResidential", async (/**{ homePage, createAccount, createOrder}*/) => {
+        
+        allure.description("Add discount 'Add '10% Discount - 6 months' for any product available, to a Residential account, and verify the discount duration and percentage");
+
         // Values for methods
         let appName = "Configure Price Quote (CPQ)";
         let tabName1 = "Accounts";

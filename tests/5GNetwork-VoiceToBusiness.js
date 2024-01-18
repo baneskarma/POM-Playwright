@@ -1,5 +1,6 @@
 import { homePage, createAccount, createOrder, } from '../tests-configuration/TestsConfig.mjs';
 import { expect, test } from '@playwright/test';
+import { allure } from 'allure-playwright';
 
 //import { test, expect } from "../tests-configuration/Fixtures.mjs"
 //import { homePage, createAccount, createOrder } from "../tests-configuration/Fixtures.js"
@@ -17,7 +18,10 @@ import { expect, test } from '@playwright/test';
  * 5. Submit order and check if product is in the account. <br>
  */
 export async function order5GNetworkVoiceToBusiness() {
-    test("Order '5G Network - Voice' through business account(B2B)", async (/**{homePage, createAccount, createOrder}*/) => {
+    test("5GNetwork-VoiceToBusiness", async (/**{homePage, createAccount, createOrder}*/) => {
+        
+        allure.description("Order product '5G Network - Voice' through business account with B2B product price list.");
+
         // Values for methods
         let appName = "Configure Price Quote (CPQ)";
         let tabName1 = "Accounts";

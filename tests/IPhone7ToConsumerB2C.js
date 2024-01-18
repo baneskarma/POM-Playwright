@@ -1,3 +1,4 @@
+import { allure } from 'allure-playwright';
 import { homePage, createAccount, updateAccount, createOrder } from '../tests-configuration/TestsConfig.mjs';
 // import { homePage, createAccount, updateAccount, createOrder, pageObjects } from '../tests-configuration/Fixtures.js';
 import { expect, test } from '@playwright/test';
@@ -17,7 +18,10 @@ import { expect, test } from '@playwright/test';
  * 5. Add product 'Apple iPhone 7' to the order, set the quantity, unit price and check total charges. <br>
  */
 export async function iPhone7ToConsumerB2C() {
-    test("Add 'Apple iPhone 7' to consumer account(B2C)", async (/**{ homePage, createAccount, updateAccount, createOrder}*/) => {
+    test("IPhone7ToConsumerB2C", async (/**{ homePage, createAccount, updateAccount, createOrder}*/) => {
+        
+        allure.description("Add 'Apple iPhone 7' to consumer account with B2C product price list");    
+
         // Values for methods
         let appName = "Configure Price Quote (CPQ)";
         let tabName1 = "Accounts";
@@ -45,7 +49,7 @@ export async function iPhone7ToConsumerB2C() {
         // Step 3:
         await homePage.goToTab( tabName1 );
         await updateAccount.searchAccount( accountName );
-        await updateAccount.billingAddress( billingStreet, billingCity, null, " ", "" );
+        await updateAccount.billingAddress( billingStreet, null, billingCity, " ", "" );
 
         // Step 4:
         await homePage.goToTab( tabName2 );

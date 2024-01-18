@@ -1,3 +1,4 @@
+import { allure } from 'allure-playwright';
 import { homePage, vlocityProductConsole } from '../tests-configuration/TestsConfig.mjs';
 //import { homePage, vlocityProductConsole } from '../tests-configuration/Fixtures.js';
 import { expect, test } from '@playwright/test';
@@ -14,7 +15,10 @@ import { expect, test } from '@playwright/test';
  * 3. Verify product details - Tariff Type: Recurring, Charging: Advance, Package Type: Voice. <br>
  */
 export async function verify5GNetworkVoice() {
-    test("Verify details of product '5G Network - Voice'", async () => {
+    test("Verify5GNetworkVoice", async () => {
+
+        allure.description("Verify that product '5G Network - Voice' exists, and verify product details");
+
         // Values for methods
         let appName = "Configure Price Quote (CPQ)";
         let tabName1 = "Vlocity Product Console";
