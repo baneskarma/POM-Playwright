@@ -37,6 +37,7 @@ export class CreateOrder {
             // createAsset
             //this.createAssetButton = page.locator('button').filter({ hasText: 'Create Assets' });
             this.createAssetButton = page.locator("//span[text()='Create Assets']");
+            this.assetSpinner = "//div[@class='mask vlc-slds-mask']//div[@role='alert']//child::div[@class='slds-spinner__dot-b']";
             this.frame;
             this.assetOrderResults = "//div//child::h1[contains(text(),'Order Submission Results')]";
             this.assetOrderSuccess = "//div//child::p[contains(text(),'Submission')]";
@@ -491,11 +492,26 @@ export class CreateOrder {
 	 */
     async createAsset() {
         await allure.step("Create an asset", async () => {
-            await this.createAssetButton.last().click();
-            this.frame = await this.page.frames().slice( -1 )[0];
-            await expect(this.frame.locator(this.assetOrderResults)).toBeVisible();
-            await expect(this.frame.locator(this.assetOrderSuccess)).toHaveText(/.*was successful./);
-            await this.frame.getByRole(this.assetNextButton).click();
+            
+            await allure.step("Click create assets button", async () => {
+                await this.createAssetButton.last().click();
+                this.frame = await this.page.frames().slice( -1 )[0];
+            });
+
+            await allure.step("Wait for page to load", async () => {
+                await expect( await this.frame.locator( this.assetSpinner ) ).toBeVisible();
+                await expect( await this.frame.locator( this.assetSpinner ) ).toBeHidden();
+            }); 
+
+            await allure.step("Wait for successful results", async () => {
+                await expect(this.frame.locator(this.assetOrderResults)).toBeVisible();
+                await expect(this.frame.locator(this.assetOrderSuccess)).toHaveText(/.*was successful./);
+            }); 
+
+            await allure.step("Click Next", async () => {
+                await this.frame.getByRole(this.assetNextButton).click();
+            });
+
             //await this.page.getByRole('button', { name: 'Asset Management' }).click();
         });
     };

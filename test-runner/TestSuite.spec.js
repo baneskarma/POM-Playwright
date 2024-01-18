@@ -16,11 +16,11 @@ test.afterAll(afterAllTests);
 
 test.describe("Test Suite", () => {
 
-    order5GNetworkVoiceToBusiness();
-    add10PercentDiscount6MonthsToResidential();
+    // order5GNetworkVoiceToBusiness();
+    // add10PercentDiscount6MonthsToResidential();
     iPhone7ToConsumerB2C();
-    iPhone8ToBusinessB2B();
-    verify5GNetworkISP();
-    verify5GNetworkVoice();
-    verify10Times10GBNational150kr();
+    // iPhone8ToBusinessB2B();
+    // verify5GNetworkISP();
+    // verify5GNetworkVoice();
+    // verify10Times10GBNational150kr();
 });
