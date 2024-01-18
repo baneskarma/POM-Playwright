@@ -1,3 +1,4 @@
+import { allure } from 'allure-playwright';
 import { homePage, vlocityProductConsole } from '../tests-configuration/TestsConfig.mjs';
 //import { homePage, vlocityProductConsole } from '../tests-configuration/Fixtures.js';
 import { expect, test } from '@playwright/test';
@@ -15,7 +16,10 @@ import { expect, test } from '@playwright/test';
  * 4. Verify child products. <br>
  */
 export async function verify10Times10GBNational150kr() {
-    test("Verify details of product '10Times 10GB National 150kr'", async () => {
+    test("Verify10Times10GBNational150kr", async () => {
+
+        allure.description("Verify that product '10Times 10GB National 150kr' exists, and to verify product details and it's child products");
+
         // Values for methods
         let appName = "Configure Price Quote (CPQ)";
         let tabName1 = "Vlocity Product Console";

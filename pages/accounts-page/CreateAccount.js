@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { allure } from 'allure-playwright';
 
 /**
  * <b>PAGES : CPQ : ACCOUNTS</b> [Create]: Create New Account
@@ -28,16 +29,29 @@ export class CreateAccount {
 	 * @param {string} nameValue - The name of the account.
 	 */
     async newAccount( typeValue, nameValue ) {
-        await expect(this.orders).toBeHidden();
-        await this.newButton.click();
-        this.acccountType = this.page.getByText(typeValue, { exact: true });
-        await this.acccountType.click();
-        await this.nextButton.click();
-        await this.accountName.click();
-        await this.accountName.fill(nameValue);
-        await expect(this.accountName).toHaveValue(nameValue);
-        await this.saveButton.click();
-        await expect(this.successMessage).toBeVisible();
-        await expect(this.successMessage).toBeHidden();
+        await allure.step("Create new account", async () => {
+            await allure.step("Click New", async () => {
+                await expect(this.orders).toBeHidden();
+                await this.newButton.click();
+            });
+
+            await allure.step("Account type: " + typeValue, async () => {
+                this.acccountType = this.page.getByText(typeValue, { exact: true });
+                await this.acccountType.click();
+                await this.nextButton.click();
+            });
+
+            await allure.step("Account name: " + nameValue, async () => {
+                await this.accountName.click();
+                await this.accountName.fill(nameValue);
+                await expect(this.accountName).toHaveValue(nameValue);
+            });
+
+            await allure.step("Account created successfully", async () => {
+                await this.saveButton.click();
+                await expect(this.successMessage).toBeVisible();
+                await expect(this.successMessage).toBeHidden();
+            });
+        });
     };
 };

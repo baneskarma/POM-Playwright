@@ -1,4 +1,5 @@
 import { expect } from "@playwright/test";
+import { allure } from "allure-playwright";
 
 export class LoginPage {
     constructor(page) {
@@ -22,13 +23,13 @@ export class LoginPage {
     async login( username, password ){
 
         // Login to salesforce 
-
-        await this.page.goto("https://test.salesforce.com");
-        await this.username.fill(username);
-        //await this.page.locator(this.username).fill(username);
-        await expect(this.username).toHaveValue(username);
-        await this.password.fill(password);
-        await expect(this.password).toHaveValue(password);
-        await this.loginButton.click();
+        await allure.step("Log in to salesforce", async () => {
+            await this.page.goto("/"); //https://test.salesforce.com
+            await this.username.fill(username);
+            await expect(this.username).toHaveValue(username);
+            await this.password.fill(password);
+            await expect(this.password).toHaveValue(password);
+            await this.loginButton.click();
+        });
     };
 };

@@ -1,4 +1,6 @@
 import { expect } from '@playwright/test';
+import { allure } from 'allure-playwright';
+
 let applicationName;
 
 export class HomePage {
@@ -26,17 +28,20 @@ export class HomePage {
     async checkHomepage( homePage ) {
 
         // Check homepage to see if we should navigate to another app.
-
-        applicationName = await this.appTitleLocator.textContent();
-        if (applicationName != homePage) {
-            await this.appLauncher.click();
-            await this.searchBar.click();
-            await this.searchBar.fill(homePage);
-            await this.appIcon.nth(0).click();
-            await expect(this.appTitleLocator).toHaveText(homePage);
-        };
-        await this.page.waitForLoadState('domcontentloaded');
-        await expect(this.page).toHaveTitle("Recently Viewed | Orders | Salesforce");
+        await allure.step("Check if homepage app is " + homePage, async () => {
+            applicationName = await this.appTitleLocator.textContent();
+            if (applicationName != homePage) {
+                await allure.step("Navigate to app " + homePage, async () => {
+                    await this.appLauncher.click();
+                    await this.searchBar.click();
+                    await this.searchBar.fill(homePage);
+                    await this.appIcon.nth(0).click();
+                    await expect(this.appTitleLocator).toHaveText(homePage);
+                });
+            };
+            await this.page.waitForLoadState('domcontentloaded');
+            await expect(this.page).toHaveTitle("Recently Viewed | Orders | Salesforce");
+        });
     };
 
     /**
@@ -50,16 +55,17 @@ export class HomePage {
     async goToTab( tabName ) {
 
         // Navigate to tab in the application
-
-        applicationName = await this.appTitleLocator.textContent();
-        if(applicationName.includes("Console")) {
-            this.tabLocator = this.page.getByRole('option', { name: tabName });
-            await this.tabLocator.click();
-        }else {
-            this.tabLocator = this.page.getByRole('link', { name: tabName });
-            await this.tabLocator.click();
-        };
-        await this.page.waitForLoadState('domcontentloaded');
+        await allure.step("Navigate to page " + tabName, async () => {
+            applicationName = await this.appTitleLocator.textContent();
+            if(applicationName.includes("Console")) {
+                this.tabLocator = this.page.getByRole('option', { name: tabName });
+                await this.tabLocator.click();
+            }else {
+                this.tabLocator = this.page.getByRole('link', { name: tabName });
+                await this.tabLocator.click();
+            };
+            await this.page.waitForLoadState('domcontentloaded');
+        });
     };
 
     /**
@@ -70,8 +76,10 @@ export class HomePage {
      * <br>
      * @param {string} pageTitle - The title of the page.
      */
-    async checkTitle( pageTitle ) {       
-        await expect(this.page).toHaveTitle(pageTitle);
+    async checkTitle( pageTitle ) {    
+        await allure.step("Check if page title is " + pageTitle, async () => { 
+            await expect(this.page).toHaveTitle(pageTitle);
+        });
     };
 
     /**

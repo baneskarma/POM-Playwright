@@ -1,4 +1,5 @@
 import { expect } from '@playwright/test';
+import { allure } from 'allure-playwright';
 
 /**
  * <b>PAGES : CPQ : ORDERS</b> [Create]: Create New Order
@@ -34,11 +35,12 @@ export class CreateOrder {
             this.productLink;
             this.totalPrice;
             // createAsset
-            this.createAssetButton = page.locator('button').filter({ hasText: 'Create Assets' });
+            //this.createAssetButton = page.locator('button').filter({ hasText: 'Create Assets' });
+            this.createAssetButton = page.locator("//span[text()='Create Assets']");
             this.frame;
             this.assetOrderResults = "//div//child::h1[contains(text(),'Order Submission Results')]";
             this.assetOrderSuccess = "//div//child::p[contains(text(),'Submission')]";
-            this.assetNextButton = 'button', { name: 'Next' };    
+            this.assetNextButton = 'button', { name: 'Next' };  
         })();   
     };
 
@@ -54,22 +56,30 @@ export class CreateOrder {
         this.alert = this.newPage.locator("//*[@role='alert' and contains(@class,'cpq-cart-errors')]");
         this.productQuantity = this.newPage.getByRole('spinbutton');
         this.chargeType;
+        this.spinner = this.newPage.locator("//div[@class='slds-grid slds-grid_vertical cpq-left-sidebar scroll']//div[@class='slds-spinner_container']//div[@class='slds-spinner__dot-b']");
         // addDiscount
         this.discountTab = this.newPage.getByRole('button', { name: 'DISCOUNTS' });
         this.discount;
+        this.discountCartTabShown = this.newPage.locator("//li[@class='slds-tabs_default__item slds-text-heading_label slds-active' and @title='Discounts ']");
+        this.discountCartTabHidden = this.newPage.locator("//li[@class='slds-tabs_default__item slds-text-heading_label' and @title='Discounts ']");
         this.discountInCart;
+        this.discountCartTab = this.newPage.locator("//a[contains(text(),'Discounts')]");
         this.editDiscountButton = this.newPage.locator("//button//*[@class='slds-button__icon slds-button__icon-- nds-button__icon nds-button__icon_ ']");
         this.discountDetails = this.newPage.locator("//label[text()='Recurring Charges']//parent::div[@class='slds-form-element cpq-pricing-picklist']//following-sibling::div");
         this.cancelButton = this.newPage.getByRole('button', { name: 'Cancel' });
+        this.discountSpinner = this.newPage.locator("//div[@class='slds-grid slds-grid_vertical cpq-product-cart']//div[@class='slds-spinner_container']//div[@class='slds-spinner_brand slds-spinner slds-spinner_medium']//div[@class='slds-spinner__dot-b']");
+
         // submitOrder
         this.submitOrderButton = this.newPage.getByRole('button', { name: 'Submit Order' });
         this.submitOrderResults = this.newPage.locator("//div//child::h1[contains(text(),'Order Submission Results')]");
         this.submitOrderSuccess = this.newPage.locator("//div//child::p[contains(text(),'Submission')]");
         this.newPageNextButton = this.newPage.locator("//p[text()='Next']");
         // productInAccount
-        this.orderAccount = this.newPage.locator("//h1//div[text()='Account']");
+        this.orderAccount = this.newPage.locator("//h1//div//slot//child::*[text()='Account']");
         this.fourthFrame;
-        this.assetManagement;
+        this.assetManagement = "//following::span[text()='Asset Management']//parent::button";
+        this.assetManagementExpanded = "//following::span[text()='Asset Management']//parent::button[@aria-expanded='true']";
+        this.assetManagementNotExpanded = "//following::span[text()='Asset Management']//parent::button[@aria-expanded='false']";
         this.productInAccount;
     };
 
@@ -82,24 +92,41 @@ export class CreateOrder {
 	 * @param {string} accountValue - The name of the account.
 	 * @param {string} startDateValue - The start date value for the order. Date Format: dd.mm.yyyy 
 	 * @param {string} priceListValue - The price list name.
-	 */
+	 *///h1//div//slot//child::*[text()='Account']
     async newOrder( accountValue, startDateValue, priceListValue ) {
-        await expect(this.orders).toBeVisible();
-        await this.newButton.click();
-        await this.searchAccount.click();
-        await this.searchAccount.fill( accountValue );
-        this.showAllResults = this.page.getByText('Show All Results for "' + accountValue + '"');
-        await this.showAllResults.click();
-        await this.searchedResults.first().click();
-        await this.startDate.click();
-        await this.startDate.fill( startDateValue );
-        await this.priceList.click();
-        await this.priceList.fill( priceListValue );
-        this.selectPriceList = this.page.getByTitle( priceListValue, { exact: true });
-        await this.selectPriceList.click();
-        await this.saveButton.click();
-        await expect(this.successMessage).toBeVisible();
-        await expect(this.successMessage).toBeHidden();
+        await allure.step("Create new order", async () => {
+
+            await allure.step("Click New", async () => {
+                await expect(this.orders).toBeVisible();
+                await this.newButton.click();
+            });
+
+            await allure.step("Account name: " + accountValue, async () => {
+                await this.searchAccount.click();
+                await this.searchAccount.fill( accountValue );
+                this.showAllResults = this.page.getByText('Show All Results for "' + accountValue + '"');
+                await this.showAllResults.click();
+                await this.searchedResults.first().click();
+            });
+
+            await allure.step("Start date: " + startDateValue, async () => {
+                await this.startDate.click();
+                await this.startDate.fill( startDateValue );
+            });
+
+            await allure.step("Price list: " + priceListValue, async () => {
+                await this.priceList.click();
+                await this.priceList.fill( priceListValue );
+                this.selectPriceList = this.page.getByTitle( priceListValue, { exact: true });
+                await this.selectPriceList.click();
+            });
+
+            await allure.step("Order created successfully", async () => {
+                await this.saveButton.click();
+                await expect(this.successMessage).toBeVisible();
+                await expect(this.successMessage).toBeHidden();
+            });
+        });
     };
 
     /**
@@ -118,56 +145,101 @@ export class CreateOrder {
      * @param {string} [discountDuration=""] - The discount duration in months.
 	 */
     async configureOrder( productName, quantityValue, chargesType, totalCharges ) {
-        await Promise.all([
-            this.page.waitForEvent('popup'),
-            this.configureOrderButton.click('button'),
-            this.page.waitForLoadState('domcontentloaded')
-          ]);
+        await allure.step("Configure order", async () => {
 
-        // change to 2nd tab
-        let pages = await this.page.context().pages();
-        await expect(pages.length).toBeGreaterThan(1);
-        this.newPage = await pages[1];
-        await this.newPage.waitForLoadState('domcontentloaded');
-        await this.newPage.waitForSelector('[placeholder="Search"]');
-        await this.newPage.bringToFront();
+            await allure.step("Click Configure Order", async () => {
+                await Promise.all([
+                    this.page.waitForEvent('popup'),
+                    this.configureOrderButton.click('button'),
+                    this.page.waitForLoadState('domcontentloaded')
+                ]);
+            });
 
-        // Initialize properties for 2nd tab
-        this.initializeProperties();
+            await allure.step("Switch to second browser tab", async () => {
+                // Switch to 2nd tab
+                let pages = await this.page.context().pages();
+                await expect(pages.length).toBeGreaterThan(1);
+                this.newPage = await pages[1];
+                await this.newPage.waitForLoadState('domcontentloaded');
+                await this.newPage.waitForSelector('[placeholder="Search"]');
+                await this.newPage.bringToFront();
 
-        // actions on 2nd tab
-        await this.searchBar.click();
-        await this.searchBar.fill( productName );
-        await expect(this.searchBar).toHaveValue( productName );
+                // Initialize properties for 2nd tab
+                this.initializeProperties();
+            });
 
-        // Check if product is shown or refresh the page.
-        this.product = this.newPage.locator("//span[text()='" + productName + "']");
-        var productCount = await this.product.count();
-        
-        while(productCount < 1) {
-            await this.newPage.reload({ waitUntil: 'networkidle' });
-            await this.searchBar.fill( productName );
-            productCount = this.product.count();
-        };
+            await allure.step("Search product: " + productName, async () => {
+                // actions on 2nd tab
+                await allure.step("Searchbar actions", async () => {
+                    await this.searchBar.click();
+                    await this.searchBar.fill( productName );
+                    await expect(this.searchBar).toHaveValue( productName );                   
+                });
 
-        this.product = this.product.first();
-        await this.product.scrollIntoViewIfNeeded();
-        await expect(this.product).toBeVisible();
-        this.addToCartButton = this.newPage.locator("//span[text()='" + productName + "']//parent::div//parent::div//following-sibling::div//button");
-        await this.addToCartButton.first().click();
+                await allure.step("Wait for products to load", async () => {
+                    await expect(this.spinner).toBeVisible();
+                    await expect(this.spinner).toBeHidden();           
+                });
 
-        // verify product is added to cart
-        this.productInCart = this.newPage.locator("//div[text()='" + productName + "']");
-        await expect(this.productInCart).toBeVisible();
-        if (await this.alert.isVisible()) {
-            throw new Error("An alert should not be present when adding the product to the cart!");
-        };
+                await allure.step("Check if product is on the page", async () => {
+                    // Check if product is shown or refresh the page.
+                    this.product = await this.newPage.locator("//span[text()='" + productName + "']");
+                    let productCount = await this.product.count();
+                    
+                    while( productCount < 1 ) {
+                        await allure.step("Reload page", async () => {
+                            await this.newPage.reload({ waitUntil: 'networkidle' });
+                            await this.newPage.waitForLoadState('domcontentloaded');
+                        });
 
-        // set quantity, unit price and check total charges
-        await this.productQuantity.fill( quantityValue );
-        // ---------------------------- missing unit price
-        this.chargeType = this.newPage.locator("//div[contains(text(),'" + chargesType + "')]//following-sibling::div");
-        await expect(this.chargeType).toContainText( totalCharges );
+                        await allure.step("Wait for products to load", async () => {
+                            await expect(this.spinner).toBeVisible();
+                            await expect(this.spinner).toBeHidden();           
+                        });
+
+                        await allure.step("Search product and check if it's on the page", async () => {
+                            await this.searchBar.fill( productName );
+                            await expect(this.searchBar).toHaveValue( productName );
+                            productCount = await this.product.count();
+                        });
+                    };
+                });
+
+                await allure.step("Verify product is visible", async () => {
+                    this.product = this.product.first();
+                    await this.product.scrollIntoViewIfNeeded();
+                    await expect(this.product).toBeVisible();
+                });
+            });
+
+            await allure.step("Add product to cart", async () => {
+
+                await allure.step("Click add to cart button", async () => {
+                    this.addToCartButton = this.newPage.locator("//span[text()='" + productName + "']//parent::div//parent::div//following-sibling::div//button");
+                    await this.addToCartButton.first().click();
+                });
+
+                await allure.step("Verify product is added to cart", async () => {
+                    // verify product is added to cart
+                    this.productInCart = this.newPage.locator("//div[text()='" + productName + "']");
+                    await expect(this.productInCart).toBeVisible();
+                    if (await this.alert.isVisible()) {
+                        throw new Error("An alert should not be present when adding the product to the cart!");
+                    };
+                });
+            });
+
+            await allure.step("Set product quantity to " + quantityValue, async () => {
+                // set quantity, unit price and check total charges
+                await this.productQuantity.fill( quantityValue );
+                // ---------------------------- missing unit price
+            });
+
+            await allure.step("Check total charges is " + totalCharges + ", for charge type: " + chargesType, async () => {
+                this.chargeType = this.newPage.locator("//div[contains(text(),'" + chargesType + "')]//following-sibling::div");
+                await expect(this.chargeType).toContainText( totalCharges );
+            });
+        });
     };
 
     /**
@@ -181,81 +253,177 @@ export class CreateOrder {
      * @param {string} discountDuration - The discount duration in months.
 	 */
     async addDiscount( discountName, discountValue, discountDuration ) {
-        let newDiscountName = discountName.toLowerCase();
-        if(newDiscountName.includes("discount") && newDiscountName.includes("months")) {
-            newDiscountName = newDiscountName.replace(/discount/gi, "DISCOUNT").replace(/months/gi, "MONTHS");
-        };
+        await allure.step("Add discount " + discountName, async () => {
+            let newDiscountName = discountName.toLowerCase();
+            if(newDiscountName.includes("discount") && newDiscountName.includes("months")) {
+                newDiscountName = newDiscountName.replace(/discount/gi, "DISCOUNT").replace(/months/gi, "MONTHS");
+            };
 
-        // search and check if discount is available, then add it to cart
-        await this.discountTab.click();
-        await this.searchBar.click();
-        await this.searchBar.fill( newDiscountName );
-        await expect(this.searchBar).toHaveValue( newDiscountName );
+            // search and check if discount is available, then add it to cart
+            await allure.step("Search discount " + newDiscountName, async () => {
 
-        this.discount = this.newPage.locator("//span[contains(text(),'" + newDiscountName + "')]");
-        await expect(this.discount.first()).toBeVisible();
-        this.addToCartButton = this.newPage.locator("//span[contains(text(),'" + newDiscountName + "')]//parent::div//parent::div//following-sibling::div//button");
-        await this.addToCartButton.first().click();
+                await allure.step("Click discount tab", async () => {
+                    await this.discountTab.click();
+                });
 
-        // Check if discount is added to cart, and verify it's duration and percentage.
-        this.discountInCart = this.newPage.getByText( discountName, { exact: true });
-        let discountInCartCount = await this.discountInCart.count();
+                await allure.step("Searchbar actions", async () => {
+                    await this.searchBar.click();
+                    await this.searchBar.fill( newDiscountName );
+                    await expect(this.searchBar).toHaveValue( newDiscountName );
+                });
 
-        if(discountInCartCount == 0){
-            await this.addToCartButton.first().click();
-        };
-        
-        while(discountInCartCount < 1) {
-            await this.newPage.reload({ waitUntil: 'networkidle' });
-            this.discountCartTab = this.newPage.locator("//a[contains(text(),'Discounts')]")
-            await this.discountCartTab.click();
-            //this.spinner = this.newPage.locator("//div[@class='slds-grid slds-grid_vertical cpq-product-cart']//div[@class='slds-spinner_container']");
-            //await expect(this.spinner.toBeVisible());
-            //await expect(this.spinner.toBeHidden());
-            discountInCartCount = await this.discountInCart.count();
-        };
+                await allure.step("Wait for discounts to load", async () => {
+                    await expect(this.spinner).toBeVisible();
+                    await expect(this.spinner).toBeHidden();           
+                });
 
-        await expect(this.discountInCart).toBeVisible();
-        await this.editDiscountButton.first().click();
-        let actualDiscountValue = await this.discountDetails.first().locator("//input").inputValue() + await this.discountDetails.nth(1).innerText();
-        discountValue = "-" + discountValue;
-        expect(actualDiscountValue).toBe(discountValue);
-        let actualDiscountDuration = await this.discountDetails.last().innerText();
-        expect(actualDiscountDuration).toBe(discountDuration);
-        await this.cancelButton.click();
+                await allure.step("Wait for discount to be visible", async () => {
+                    this.discount = this.newPage.locator("//span[contains(text(),'" + newDiscountName + "')]");
+                    await expect(this.discount.first()).toBeVisible();
+                });
+            });
+            
+            await allure.step("Add discount to cart", async () => {
+
+                await allure.step("Click Add to cart", async () => {
+                    this.addToCartButton = this.newPage.locator("//span[contains(text(),'" + newDiscountName + "')]//parent::div//parent::div//following-sibling::div//button");
+                    await this.addToCartButton.first().click();
+                });
+
+                await allure.step("Verify DISCOUNTS tab is opened", async () => {
+
+                    await allure.step("Click DISCOUNTS tab if it's not shown", async () => {
+                        if( await this.discountCartTabHidden.isVisible() === true ) {                           
+                            await this.discountCartTabHidden.click();
+                        };
+                        await expect( await this.discountCartTabShown ).toBeVisible();
+                    });
+
+                    await allure.step("Wait for DISCOUNTS tab in cart to load", async () => {
+                        let spinner = this.discountSpinner.last();
+                        await expect( await spinner ).toBeVisible();
+                        await expect( await spinner ).toBeHidden();           
+                    });    
+                });
+
+                // Check if discount is added to cart, and verify it's duration and percentage.
+                await allure.step("Verify discount is added to cart", async () => {
+                    let discountInCartCount;
+
+                    await allure.step("Check if discount is added to cart", async () => {
+                        this.discountInCart = await this.newPage.getByText( discountName, { exact: true });
+                        discountInCartCount = await this.discountInCart.count();
+                    });
+
+                    await allure.step("Reload page if discount is still not visible in cart", async () => {
+
+                        while( discountInCartCount < 1 ) {
+                            
+                            await allure.step("Reload page and click DISCOUNTS tab", async () => {
+                                await this.newPage.reload({ waitUntil: 'networkidle' });
+                                await this.discountCartTab.click();
+                            });
+
+                            await allure.step("Wait for DISCOUNTS tab in cart to load", async () => {
+                                let spinner = this.discountSpinner.last();
+
+                                try {
+                                    await expect( await spinner ).toBeVisible();
+                                    await expect( await spinner ).toBeHidden();   
+                                } catch (error) {
+                                    allure.logStep("DISCOUNTS tab is already loaded")
+                                }   
+                                discountInCartCount = await this.discountInCart.count();     
+                            });
+                        };
+                    });
+
+                    await allure.step("Verify discount visibility in the cart", async () => {
+                        await expect(this.discountInCart).toBeVisible();
+                    });
+                });
+            });
+
+            await allure.step("Verify discount value is -" + discountValue, async () => {
+                await this.editDiscountButton.first().click();
+                let actualDiscountValue = await this.discountDetails.first().locator("//input").inputValue() + await this.discountDetails.nth(1).innerText();
+                discountValue = "-" + discountValue;
+                expect(actualDiscountValue).toBe(discountValue);
+            });
+
+            await allure.step("Verify discount duration is " + discountDuration, async () => {
+                let actualDiscountDuration = await this.discountDetails.last().innerText();
+                expect(actualDiscountDuration).toBe(discountDuration);
+                await this.cancelButton.click();
+            });
+        });
     };
 
     /**
      * <b>[Method]</b> - Submit configured order <br>
 	 * <br>
 	 * <i>Method functionality:</i><br>
-	 * This functionality submits the order we configured, and checks if it was successful. <br>
+	 * This function submits the order we configured, and checks if it was successful. <br>
 	 */
     async submitOrder() {
         // Submit order
-        await expect(this.submitOrderButton).toBeVisible();
-        await this.submitOrderButton.click();
-        await expect(this.submitOrderResults).toBeVisible();
-        await expect(this.submitOrderSuccess).toHaveText(/.*was successful./);
-        await this.newPageNextButton.click();
+        await allure.step("Submit order", async () => {
+
+            await allure.step("Click Submit Order", async () => {
+                await expect(this.submitOrderButton).toBeVisible();
+                await this.submitOrderButton.click();
+            });
+
+            await allure.step("Wait for successful results", async () => {
+                await expect(this.submitOrderResults).toBeVisible();
+                await expect(this.submitOrderSuccess).toHaveText(/.*was successful./);
+            });
+
+            await allure.step("Click Next", async () => {
+                await this.newPageNextButton.click();
+            });
+        });
     };
 
     /**
      * <b>[Method]</b> - Check if the product is in the account <br>
 	 * <br>
 	 * <i>Method functionality:</i><br>
-	 * This functionality checks if the product was successfully added to the account, after submiting the order. <br>
+	 * This function checks if the product was successfully added to the account, after submiting the order. <br>
      * <br>
 	 * @param {string} productName - The name of the product.
 	 */
     async checkProductInAccount( productName ) {
-        await expect(this.orderAccount).toBeVisible();
-        this.fourthFrame = await this.newPage.frames().slice( -1 )[0];
-        this.productInAccount = this.fourthFrame.locator("//div[@class='p-name']//a[text()='" + productName + "']");
-        this.productInAccount = await this.productInAccount.first();
-        //await expect(this.productInAccount).toBeVisible();
-        let productInAccount = await this.productInAccount.textContent();
-        await expect(productInAccount).toBe(productName);
+        await allure.step("Verify product '" + productName + "', was successfully added to the account", async () => {
+                        
+            await allure.step("Wait for account to be visible", async () => {
+                await expect( this.orderAccount ).toBeVisible();
+            });
+
+            await allure.step("Verify asset menagment is visible", async () => {
+                let assetManagement = this.newPage.locator(this.assetManagement);
+                await assetManagement.scrollIntoViewIfNeeded();
+                await expect(assetManagement).toBeVisible();
+            });
+
+            await allure.step("Verify asset menagment is expanded", async () => {
+                let assetManagementNotExpanded = this.newPage.locator(this.assetManagementNotExpanded);
+                let assetManagementExpanded = this.newPage.locator(this.assetManagementExpanded);
+                if( await assetManagementNotExpanded.isVisible() === true ) {
+                    await assetManagementNotExpanded.click();
+                };
+                await expect( await assetManagementExpanded ).toBeVisible();
+            });
+
+            await allure.step("Verify product is visible as asset", async () => {
+                this.fourthFrame = await this.newPage.frames().slice( -1 )[0];
+                this.productInAccount = this.fourthFrame.locator("//div[@class='p-name']//a[text()='" + productName + "']");
+                this.firstProductInAccount = await this.productInAccount.first();
+                //await expect(this.productInAccount).toBeVisible();
+                let productInAccount = this.firstProductInAccount.textContent();
+                expect( await productInAccount).toBe(productName);
+            });
+        });
     };
 
     /**
@@ -270,23 +438,49 @@ export class CreateOrder {
 	 * @param {string} totalPrice - The total price of the order.
 	 */
     async addProductToOrder( productName, quantity, unitPrice, totalPrice ) {
-        await this.addProdcutsButton.click();
-        await this.searchProduct.click();
-        await this.searchProduct.fill( productName );
-        this.productOption = this.page.locator('[role="option"]').filter({ hasText: productName });
-        await this.productOption.nth(1).click();
-        await this.pageNextButton.click();
+        await allure.step("Add product '" + productName + "' to the order", async () => {
 
-        // await this.page.pause();
-        await this.quantityButton.click();
-        await this.quantity.fill( quantity );
-        await this.unitPriceButton.click();
-        await this.unitPrice.fill( unitPrice );
-        await this.saveButton.click();
-        this.productLink = this.page.getByRole('rowheader', { name: productName }).getByRole('link');
-        await this.productLink.hover();
-        this.totalPrice = this.page.getByLabel( productName + ' Preview').filter({ hasText: totalPrice });
-        await expect(this.totalPrice).toBeVisible();
+            await allure.step("Click Add Products", async () => {
+                await this.addProdcutsButton.click();
+            });
+            
+            await allure.step("Search product: " + productName, async () => {
+                await this.searchProduct.click();
+                await this.searchProduct.fill( productName );
+                //await expect(this.searchProduct).toHaveValue(productName);
+                this.productOption = this.page.locator('[role="option"]').filter({ hasText: productName });
+
+                let searchedProduct = this.productOption.nth(1);
+                if(await searchedProduct.isVisible() === true) {
+                    await searchedProduct.click();
+                } else {
+                    await this.searchProduct.click();            
+                    await searchedProduct.click();
+                }
+                await this.pageNextButton.click();
+            });
+
+            await allure.step("Set product quantity to " + quantity, async () => {
+                await this.quantityButton.click();
+                await this.quantity.fill( quantity );
+            });
+
+            await allure.step("Set product unit price to " + unitPrice, async () => {
+                await this.unitPriceButton.click();
+                await this.unitPrice.fill( unitPrice );
+            });
+
+            await allure.step("Save added product", async () => {
+                await this.saveButton.click();
+            });
+
+            await allure.step("Verify total price is " + totalPrice, async () => {
+                this.productLink = this.page.getByRole('rowheader', { name: productName }).getByRole('link');
+                await this.productLink.hover();
+                this.totalPrice = this.page.getByLabel( productName + ' Preview').filter({ hasText: totalPrice });
+                await expect(this.totalPrice).toBeVisible();
+            });
+        });
     };
 
     /**
@@ -296,11 +490,13 @@ export class CreateOrder {
 	 * This functionality creates an asset of the added product. <br>
 	 */
     async createAsset() {
-        await this.createAssetButton.nth(2).click();
-        this.frame = await this.page.frames().slice( -1 )[0];
-        await expect(this.frame.locator(this.assetOrderResults)).toBeVisible();
-        await expect(this.frame.locator(this.assetOrderSuccess)).toHaveText(/.*was successful./);
-        await this.frame.getByRole(this.assetNextButton).click();
-        //await this.page.getByRole('button', { name: 'Asset Management' }).click();
+        await allure.step("Create an asset", async () => {
+            await this.createAssetButton.last().click();
+            this.frame = await this.page.frames().slice( -1 )[0];
+            await expect(this.frame.locator(this.assetOrderResults)).toBeVisible();
+            await expect(this.frame.locator(this.assetOrderSuccess)).toHaveText(/.*was successful./);
+            await this.frame.getByRole(this.assetNextButton).click();
+            //await this.page.getByRole('button', { name: 'Asset Management' }).click();
+        });
     };
 };
