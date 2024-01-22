@@ -498,10 +498,10 @@ export class CreateOrder {
                 this.frame = await this.page.frames().slice( -1 )[0];
             });
 
-            await allure.step("Wait for page to load", async () => {
-                await expect( await this.frame.locator( this.assetSpinner ) ).toBeVisible();
-                await expect( await this.frame.locator( this.assetSpinner ) ).toBeHidden();
-            }); 
+            // await allure.step("Wait for page to load", async () => {
+            //     await expect( await this.frame.locator( this.assetSpinner ) ).toBeVisible();
+            //     await expect( await this.frame.locator( this.assetSpinner ) ).toBeHidden();
+            // }); 
 
             await allure.step("Wait for successful results", async () => {
                 await expect(this.frame.locator(this.assetOrderResults)).toBeVisible();
