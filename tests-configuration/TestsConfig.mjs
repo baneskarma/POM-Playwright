@@ -9,7 +9,7 @@ import { CreateOrder } from '../pages/orders-page/CreateOrder.js';
 import { VlocityProductConsole } from '../pages/vlocity-product-console/VPCHomepage.js';
 
 
-let page;
+export let page;
 let browser;
 let context;
 export let loginPage;
