@@ -10,6 +10,7 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.40.1",
+    "@zerostep/playwright": "^0.1.5",
     "allure-playwright": "^2.9.2"
   },
   "dependencies": {

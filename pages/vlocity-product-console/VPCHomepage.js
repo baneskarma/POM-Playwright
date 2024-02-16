@@ -140,7 +140,7 @@ export class VlocityProductConsole {
                         const childProductNameColumn = await childProductRow.locator("//th");
                         let actualName = await childProductNameColumn.innerText();
                         actualName = actualName.trim();
-                        console.log(actualName, typeof(actualName));
+                        //console.log(actualName, typeof(actualName));
                         if(actualName === name) {
                             found = true;
                             break;

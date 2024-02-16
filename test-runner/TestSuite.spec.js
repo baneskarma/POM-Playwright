@@ -9,13 +9,14 @@ import { iPhone8ToBusinessB2B } from '../tests/IPhone8ToBusinessB2B.js';
 import { verify5GNetworkISP } from '../tests/Verify5GNetworkISP.js';
 import { verify5GNetworkVoice } from '../tests/Verify5GNetworkVoice.js';
 import { verify10Times10GBNational150kr } from '../tests/Verify10Times10GBNational150kr.js';
+import { zeroStepDemo } from '../tests/zeroStepDemo.js';
 
 test.beforeAll(beforeAllTests);
 test.beforeEach(beforeEachTest);
 test.afterAll(afterAllTests);
 
 test.describe("Test Suite", () => {
-
+    // zeroStepDemo();
     order5GNetworkVoiceToBusiness();
     add10PercentDiscount6MonthsToResidential();
     iPhone7ToConsumerB2C();

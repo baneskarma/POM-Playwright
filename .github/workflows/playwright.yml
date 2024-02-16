@@ -10,8 +10,8 @@ on:
   push:
     branches: [ blagoja, main ]
 
-  pull_request:
-    branches: [ blagoja, main ] 
+  # pull_request:
+  #   branches: [ blagoja, main ] 
 
 jobs:
   test:
