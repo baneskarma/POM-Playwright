@@ -1,5 +1,7 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -7,12 +9,26 @@ import { defineConfig, devices } from '@playwright/test';
  */
 // require('dotenv').config();
 
+
+// How to set the environment:
+// inside bash terminal to set: export NODE_ENV=uat to unset: unset NODE_ENV --> inside windows terminal: set NODE_ENV=uat
+if (!process.env.NODE_ENV) {
+  const relativePath = './tests-configuration/environments/.env';
+  const fullPath = path.resolve(relativePath);
+  dotenv.config({ path: fullPath });
+} else if (process.env.NODE_ENV == "uat") {
+  const relativePath = './tests-configuration/environments/.env.uat';
+  const fullPath = path.resolve(relativePath);
+  dotenv.config({ path: fullPath });
+}
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
 // module.exports = defineConfig({
 export default defineConfig({
-  testDir: './test-runner',
+  // testDir: './test-runner',
+  testDir: './tests/api-tests/',
   /* Maximum time one test can run for. */
   timeout: 150 * 1000,
   expect: {

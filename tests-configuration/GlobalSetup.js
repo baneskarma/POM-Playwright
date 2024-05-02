@@ -16,4 +16,5 @@ export default async function globalSetup() {
   } catch (error) {
     console.error(error);
   }
+
 };

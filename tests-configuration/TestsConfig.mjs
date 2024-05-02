@@ -75,7 +75,7 @@ export const beforeEachTest = async() => {
 //export async function beforeEachTest() {
 
     //const loginPage = new LoginPage(page);
-    await loginPage.login("team.seavus@partner-prod.com.vlocitysbx", "seavusQA123!");
+    await loginPage.login(process.env.sfUsername, process.env.sfPassword, false);
 };
 
 /**
