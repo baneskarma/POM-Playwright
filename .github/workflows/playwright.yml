@@ -47,6 +47,20 @@ jobs:
 
       - name: Run Playwright tests
         run: xvfb-run npx playwright test TestSuite.spec.js --project=chromium || true
+        env:
+            API: ${{ secrets.API }}
+            BASE_URL: ${{ secrets.BASE_URL }}
+            CLIENT_ID: ${{ secrets.CLIENT_ID }}
+            CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+            REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
+            SF_URL: ${{ secrets.SF_URL }}
+            COMMON_URL: ${{ secrets.COMMON_URL }}
+
+            SF_USERNAME: ${{ secrets.SF_USERNAME }}
+            SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
+            # KEY_PEM_PATH: ${{ secrets.KEY_PEM_PATH }}
+            # CERT_PEM_PATH: ${{ secrets.CERT_PEM_PATH }}
+
 
       # - name: Upload Allure Results
       # uses: actions/upload-artifact@v4
