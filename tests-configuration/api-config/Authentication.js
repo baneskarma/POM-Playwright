@@ -6,7 +6,7 @@ import https from 'https';
 import fs from 'fs';
 import crypto from 'crypto';
 import opener from 'opener';
-// asd;
+
 function generateCodeVerifier() {
 	return crypto.randomBytes(32).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
