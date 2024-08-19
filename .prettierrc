@@ -1,0 +1,18 @@
+{
+  "singleQuote": true,
+  "parser": "flow",
+  "semi": true,
+  "trailingComma": "es5",
+  "object-curly-newline": [{ "multiline": true, "consistent": false }],
+  "printWidth": 10000,
+  "newline-per-chained-call": false,
+  "array-spacing": true,
+  "array-bracket-newline": true,
+  "bracketSpacing": true,
+  "tabWidth": 4,
+  "useTabs": true,
+  "editor.formatOnSave": true,
+  "function-call-argument-newline": true,
+  "parenSpacing": true,
+  "@wordpress/prettier-config": true
+}

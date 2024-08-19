@@ -5,13 +5,13 @@ on:
   workflow_dispatch: # Trigger the workflow manually
 
   schedule:
-    - cron: '30 9 * * 0-4'
+    - cron: "30 9 * * 0-4"
 
   push:
-    branches: [ blagoja, main ]
+    branches: [blagoja, main]
 
   # pull_request:
-  #   branches: [ blagoja, main ] 
+  #   branches: [ blagoja, main ]
 
 jobs:
   test:
@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     # needs: setup
     steps:
-    # - name: Install Allure
-    #   run: sudo apt-add-repository ppa:qameta/allure -y && sudo apt-get update -y && sudo apt-get install allure -y 
+      # - name: Install Allure
+      #   run: sudo apt-add-repository ppa:qameta/allure -y && sudo apt-get update -y && sudo apt-get install allure -y
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
@@ -62,7 +62,7 @@ jobs:
       #     name: playwright-report
       #     path: allure-results/
       #     retention-days: 30
-      
+
       # - name: Clean up gh-pages branch
       #   run: |
       #      git checkout -f gh-pages
@@ -97,7 +97,7 @@ jobs:
       - name: Deploy report to Github Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
-        with: 
+        with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-history
@@ -107,7 +107,7 @@ jobs:
         #   PUBLISH_DIR: allure-history
 
       # - name: Open Allure Report
-      #   run: allure open allure-report    
+      #   run: allure open allure-report
 
   # allure-report:
   #   runs-on: ubuntu-latest
@@ -123,9 +123,9 @@ jobs:
   #       with:
   #         name: playwright-report
   #         path: allure-report/
-  
+
   #     - name: Generate Allure Report
   #       run: allure generate allure-results --clean -o allure-report
-  
+
   #     - name: Open Allure Report
   #       run: allure open allure-report
