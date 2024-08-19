@@ -6,9 +6,9 @@ import { Verifications } from '../verifications/Verifications';
  * **PAGES : CPQ : ORDERS** [Create]: Create New Order
  */
 export class CreateOrder {
-	constructor(request) {
+	constructor( request ) {
 		this.request = request;
-		this.verifications = new Verifications(this.request);
+		this.verifications = new Verifications( this.request );
 	}
 
 	/**
@@ -24,16 +24,16 @@ export class CreateOrder {
 	 * @param {string} priceListName - The name of the price list
 	 * @param {string} status - The order status. should be 'Draft'
 	 */
-	async newOrder(accountId, startDate, priceListName, status) {
-		await allure.step('Create new Order', async () => {
+	async newOrder( accountId, startDate, priceListName, status ) {
+		await allure.step( 'Create new Order', async () => {
 			//let priceListId;
 			let orderData;
 			let orderUrl;
 
-			const priceListId = await this.getPriceListId(priceListName);
+			const priceListId = await this.getPriceListId( priceListName );
 			//console.log(priceListId);
 
-			await allure.step('Store Order Data', async () => {
+			await allure.step( 'Store Order Data', async () => {
 				orderData = {
 					AccountId: accountId,
 					EffectiveDate: startDate,
@@ -51,36 +51,36 @@ export class CreateOrder {
 			});
 
 			try {
-				const response = await this.request.post(process.env.COMMON_ORDER_URL, {
+				const response = await this.request.post( process.env.COMMON_ORDER_URL, {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 						'Content-Type': 'application/json',
 					},
-					data: JSON.stringify(orderData),
+					data: JSON.stringify( orderData ),
 				});
 
-				await this.verifications.verifyResponse(response, 201);
+				await this.verifications.verifyResponse( response, 201 );
 
-				await allure.step('Retrieving response data', async () => {
+				await allure.step( 'Retrieving response data', async () => {
 					const responseData = await response.json();
-					console.log('Response from creating order is Success:', responseData);
+					console.log( 'Response from creating order is Success:', responseData );
 
-					await allure.step('Store Order ID', async () => {
+					await allure.step( 'Store Order ID', async () => {
 						const orderId = await responseData.id;
 						process.env.ORDER_ID = orderId;
 						//console.log("Order ID: " + process.env.orderId);
 					});
 
-					await allure.step('Store Order Url', async () => {
+					await allure.step( 'Store Order Url', async () => {
 						orderUrl = process.env.COMMON_ORDER_URL + process.env.orderId;
 						process.env.CURRENT_ORDER_URL = orderUrl;
 					});
 				});
 
 				orderData.priceListName = priceListName;
-				await this.verifications.verifyObjectIdAndData('Order', process.env.ORDER_ID, process.env.CURRENT_ORDER_URL, orderData);
-			} catch (error) {
-				console.error('Order creation failed:', error);
+				await this.verifications.verifyObjectIdAndData( 'Order', process.env.ORDER_ID, process.env.CURRENT_ORDER_URL, orderData );
+			} catch ( error ) {
+				console.error( 'Order creation failed:', error );
 				throw error;
 			}
 		});
@@ -94,16 +94,16 @@ export class CreateOrder {
 	 *
 	 * @param {string} priceListName - The name of the price list
 	 */
-	async getPriceListId(priceListName) {
+	async getPriceListId( priceListName ) {
 		let priceListId;
-		await allure.step('Get id for the price list: ' + priceListName, async () => {
+		await allure.step( 'Get id for the price list: ' + priceListName, async () => {
 			try {
-				const response = await this.request.get(process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__PriceList__c', { headers: { Authorization: `Bearer ${process.env.sfAccessToken}` } });
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__PriceList__c', { headers: { Authorization: `Bearer ${process.env.sfAccessToken}` } });
 
 				const responseData = await response.json();
 				const records = responseData.records;
-				for (const record of records) {
-					if (record.Name === priceListName) {
+				for ( const record of records ) {
+					if ( record.Name === priceListName ) {
 						priceListId = record.Id;
 						// console.log(typeof priceListId);
 						// console.log("The id of price list: " + priceListId);
@@ -111,9 +111,9 @@ export class CreateOrder {
 					}
 				}
 
-				throw new Error('There is no price list with name: ' + priceListName);
-			} catch (error) {
-				console.error('Getting Order Price List ID failed:', error);
+				throw new Error( 'There is no price list with name: ' + priceListName );
+			} catch ( error ) {
+				console.error( 'Getting Order Price List ID failed:', error );
 				throw error;
 			}
 		});
@@ -132,20 +132,20 @@ export class CreateOrder {
 	 * @param {string} quantity - The quantity of the product
 	 * @param {string} unitPrice - The unit price of the product
 	 */
-	async createOrderItem(orderId, productName, quantity, unitPrice) {
+	async createOrderItem( orderId, productName, quantity, unitPrice ) {
 		// const verifications = new Verifications(this.request);
 
-		await allure.step("Add Product '" + productName + "' to Order", async () => {
+		await allure.step( "Add Product '" + productName + "' to Order", async () => {
 			let orderItemData;
 			let orderItemUrl;
 
-			const productAndPricebookEntryId = await this.getProductIdAndPricebookEntryId(productName);
+			const productAndPricebookEntryId = await this.getProductIdAndPricebookEntryId( productName );
 			const productId = productAndPricebookEntryId.productId;
 			const pricebookEntryId = productAndPricebookEntryId.pricebookEntryId;
 			// console.log(productId);
 			// console.log(pricebookEntryId);
 
-			await allure.step('Store Order Item Data', async () => {
+			await allure.step( 'Store Order Item Data', async () => {
 				orderItemData = {
 					OrderId: orderId,
 					Product2Id: productId,
@@ -158,35 +158,35 @@ export class CreateOrder {
 			});
 
 			try {
-				const response = await this.request.post(process.env.COMMON_ORDER_ITEM_URL, {
+				const response = await this.request.post( process.env.COMMON_ORDER_ITEM_URL, {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 						'Content-Type': 'application/json',
 					},
-					data: JSON.stringify(orderItemData),
+					data: JSON.stringify( orderItemData ),
 				});
 
-				await this.verifications.verifyResponse(response, 201);
+				await this.verifications.verifyResponse( response, 201 );
 
-				await allure.step('Retrieving response data', async () => {
+				await allure.step( 'Retrieving response data', async () => {
 					const responseData = await response.json();
-					console.log('Response from adding item to order is Success:', responseData);
+					console.log( 'Response from adding item to order is Success:', responseData );
 
-					await allure.step('Store Order Item ID', async () => {
+					await allure.step( 'Store Order Item ID', async () => {
 						const orderItemId = await responseData.id;
 						process.env.ORDER_ITEM_ID = orderItemId;
 						//console.log("Order ID: " + process.env.ORDER_ID);
 					});
 
-					await allure.step('Store Order Item Url', async () => {
+					await allure.step( 'Store Order Item Url', async () => {
 						orderItemUrl = process.env.COMMON_ORDER_ITEM_URL + process.env.ORDER_ITEM_ID;
 						process.env.CURRENT_ORDER_ITEM_URL = orderItemUrl;
 					});
 				});
 
-				await this.verifications.verifyObjectIdAndData('OrderItem', process.env.ORDER_ITEM_ID, process.env.CURRENT_ORDER_ITEM_URL, orderItemData);
-			} catch (error) {
-				console.error('Adding item to order has failed:', error);
+				await this.verifications.verifyObjectIdAndData( 'OrderItem', process.env.ORDER_ITEM_ID, process.env.CURRENT_ORDER_ITEM_URL, orderItemData );
+			} catch ( error ) {
+				console.error( 'Adding item to order has failed:', error );
 				throw error;
 			}
 		});
@@ -201,13 +201,13 @@ export class CreateOrder {
 	 *
 	 * @param {string} productName - The name of the product
 	 */
-	async getProductIdAndPricebookEntryId(productName) {
+	async getProductIdAndPricebookEntryId( productName ) {
 		// pricebook entry has the same name as the product
 		let productId;
 		let pricebookEntryId;
-		await allure.step('Get id for the product and pricebook entry: ' + productName, async () => {
+		await allure.step( 'Get id for the product and pricebook entry: ' + productName, async () => {
 			try {
-				const response = await this.request.get(process.env.COMMON_URL + 'query?q=SELECT+Name,Id,Product2Id+FROM+PriceBookEntry', {
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id,Product2Id+FROM+PriceBookEntry', {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 					},
@@ -215,8 +215,8 @@ export class CreateOrder {
 
 				const responseData = await response.json();
 				const records = responseData.records;
-				for (const record of records) {
-					if (record.Name === productName) {
+				for ( const record of records ) {
+					if ( record.Name === productName ) {
 						productId = record.Product2Id;
 						pricebookEntryId = record.Id;
 						//console.log("The id of product: " + productId + " id of entry: " + pricebookEntryId);
@@ -224,9 +224,9 @@ export class CreateOrder {
 					}
 				}
 
-				throw new Error('There is no pricebook entry with name: ' + productName);
-			} catch (error) {
-				console.error('Getting Product ID and Pricebook Entry ID failed:', error);
+				throw new Error( 'There is no pricebook entry with name: ' + productName );
+			} catch ( error ) {
+				console.error( 'Getting Product ID and Pricebook Entry ID failed:', error );
 				throw error;
 			}
 		});
@@ -243,10 +243,10 @@ export class CreateOrder {
 	 * @param {string} orderStatus - The status value of the order
 	 * @param {string} orderUrl - The URL from the order we want
 	 */
-	async changeOrderStatus(orderStatus, orderUrl) {
-		await allure.step('Change order status to: ' + orderStatus, async () => {
+	async changeOrderStatus( orderStatus, orderUrl ) {
+		await allure.step( 'Change order status to: ' + orderStatus, async () => {
 			try {
-				const response = await this.request.patch(orderUrl, {
+				const response = await this.request.patch( orderUrl, {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 						'Content-Type': 'application/json',
@@ -254,12 +254,12 @@ export class CreateOrder {
 					data: JSON.stringify({ Status: orderStatus }),
 				});
 
-				await this.verifications.verifyResponse(response, 204);
+				await this.verifications.verifyResponse( response, 204 );
 
 				let orderData = { Status: orderStatus };
-				await this.verifications.verifyObjectIdAndData('Order', process.env.ORDER_ID, orderUrl, orderData);
-			} catch (error) {
-				console.error("Change order status to '" + orderStatus + "', has failed: ", error);
+				await this.verifications.verifyObjectIdAndData( 'Order', process.env.ORDER_ID, orderUrl, orderData );
+			} catch ( error ) {
+				console.error( "Change order status to '" + orderStatus + "', has failed: ", error );
 				throw error;
 			}
 		});
@@ -273,11 +273,11 @@ export class CreateOrder {
 	 *
 	 * @param {string} discountName - The name of the discount
 	 */
-	async getDiscountId(discountName) {
+	async getDiscountId( discountName ) {
 		let discountId;
-		await allure.step('Get id for the discount: ' + discountName, async () => {
+		await allure.step( 'Get id for the discount: ' + discountName, async () => {
 			try {
-				const response = await this.request.get(process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__OrderDiscount__c', {
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__OrderDiscount__c', {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 					},
@@ -285,8 +285,8 @@ export class CreateOrder {
 
 				const responseData = await response.json();
 				const records = responseData.records;
-				for (const record of records) {
-					if (record.Name === discountName) {
+				for ( const record of records ) {
+					if ( record.Name === discountName ) {
 						discountId = record.Id;
 						// console.log(typeof discountId);
 						// console.log("The id of the discount is: " + discountId);
@@ -294,9 +294,9 @@ export class CreateOrder {
 					}
 				}
 
-				throw new Error('There is no discount with name: ' + discountName);
-			} catch (error) {
-				console.error('Getting Discount ID failed:', error);
+				throw new Error( 'There is no discount with name: ' + discountName );
+			} catch ( error ) {
+				console.error( 'Getting Discount ID failed:', error );
 				throw error;
 			}
 		});

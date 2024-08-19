@@ -62,6 +62,10 @@ export default [
 			parser: { parseForESLint },
 		},
 
+		settings: {
+			polyfills: ['Promise', 'Promise.all'],
+		},
+
 		plugins: {
 			prettier: eslintPluginPrettier,
 			stylistic: stylisticJsPlugin,
@@ -69,7 +73,19 @@ export default [
 			'check-file': checkFile,
 		},
 
-		ignores: ['node_modules/', 'test-results/', 'allure-results/', 'allure-report/', 'playwright-report/', '.vscode/*', 'environments/', '**/*config.js', '**/*.json'],
+		ignores: [
+			// prettier-ignore
+			'node_modules/*.js',
+			'test-results/*.js',
+			'allure-results/*.js',
+			'allure-report/*.js',
+			'playwright-report/*.js',
+			'.vscode/*',
+			'environments/.env*',
+			'**/*index.js',
+			'**/*config.js',
+			'**/*.json',
+		],
 
 		rules: {
 			...eslintRecommended,
@@ -96,7 +112,7 @@ export default [
 			'stylistic/array-bracket-spacing': ['warn', 'always', { objectsInArrays: false }],
 			'object-curly-newline': ['error', { multiline: true, consistent: true }],
 			'no-unused-vars': 'warn',
-			'comma-spacing': ['error', { before: false, after: true }],
+			'comma-spacing': ['warn', { before: false, after: true }],
 			'no-restricted-syntax': [
 				'warn',
 				{

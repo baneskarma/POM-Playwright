@@ -15,8 +15,8 @@ import { VerifyProduct } from '../../api-pages/products-api-page/VerifyProduct';
  * 3. Verify reccurring charges.
  */
 export async function verify5GNetworkISP() {
-	test('API-Verify5GNetworkISP', async ({ request }) => {
-		allure.description("Verify that product '5G Network - ISP' exists, and verify product details");
+	test( 'API-Verify5GNetworkISP', async ({ request }) => {
+		allure.description( "Verify that product '5G Network - ISP' exists, and verify product details" );
 
 		// npx eslint --cache --cache-location .eslintcache .  // Lint with caching enabled
 		// npx eslint --clear-cache
@@ -32,13 +32,13 @@ export async function verify5GNetworkISP() {
 		let productPricingVariable = 'Recurring';
 
 		// Objects of pages
-		const verifyProduct = new VerifyProduct(request);
+		const verifyProduct = new VerifyProduct( request );
 
 		// Step 1:
-		await verifyProduct.verifyProductExists(productName, productCode, false);
+		await verifyProduct.verifyProductExists( productName, productCode, false );
 
 		// Step 2:
-		await verifyProduct.verifyProductDetails(process.env.currentProductUrl, productDetails);
+		await verifyProduct.verifyProductDetails( process.env.CURRENT_PRODUCT_URL, productDetails );
 
 		// Step 3:
 	});

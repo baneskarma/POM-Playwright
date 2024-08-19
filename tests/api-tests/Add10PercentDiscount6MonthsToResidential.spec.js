@@ -1,10 +1,10 @@
-import { expect, request, test } from "@playwright/test";
+import { test } from '@playwright/test';
 // import { getAccessToken } from '../../tests-configuration/api-config/authentication.js';
-import { allure } from "allure-playwright";
-import { CreateAccount } from "../../api-pages/accounts-api-page/CreateAccount";
-import { UpdateAccount } from "../../api-pages/accounts-api-page/UpdateAccount";
-import { CreateOrder } from "../../api-pages/orders-api-page/CreateOrder";
-import { CreateAsset } from "../../api-pages/assets-api-page/CreateAsset";
+import { allure } from 'allure-playwright';
+import { CreateAccount } from '../../api-pages/accounts-api-page/CreateAccount';
+// import { UpdateAccount } from '../../api-pages/accounts-api-page/UpdateAccount';
+import { CreateOrder } from '../../api-pages/orders-api-page/CreateOrder';
+import { CreateAsset } from '../../api-pages/assets-api-page/CreateAsset';
 
 /**
  * **[Test Method]** - Add 'Add '10% Discount - 6 months' to Residential account
@@ -21,60 +21,40 @@ import { CreateAsset } from "../../api-pages/assets-api-page/CreateAsset";
  * 6. Activate the order.
  */
 export async function add10PercentDiscount6MonthsToResidential() {
-  test( "API-add10PercentDiscount6MonthsToResidential", async ({ request }) => {
-    allure.description(
-      "Add discount 'Add '10% Discount - 6 months' for any product available, to a Residential account, and verify the discount duration and percentage",
-    );
+	test( 'API-add10PercentDiscount6MonthsToResidential', async ({ request }) => {
+		allure.description( "Add discount 'Add '10% Discount - 6 months' for any product available, to a Residential account, and verify the discount duration and percentage" );
 
-    // Variable Values
-    let acccountType = "Residential";
-    let accountName = "Blagoja70";
-    let orderStartDate = "2023-07-10"; // 10th of July 2023 with format: YYYY-MM-DD
-    let orderPriceList = "B2C Product Price List";
-    let orderStatus = "Draft";
-    let discountName = "10% Discount - 6 months";
-    let productName = "5G Network - Voice";
-    let quantity = "1";
-    let unitPrice = "30";
-    let orderStatusChange = "Activated";
+		// Variable Values
+		let accountType = 'Residential';
+		let accountName = 'Blagoja70';
+		let orderStartDate = '2023-07-10'; // 10th of July 2023 with format: YYYY-MM-DD
+		let orderPriceList = 'B2C Product Price List';
+		let orderStatus = 'Draft';
+		// let discountName = '10% Discount - 6 months';
+		let productName = '5G Network - Voice';
+		let quantity = '1';
+		let unitPrice = '30';
+		let orderStatusChange = 'Activated';
 
-    // Objects of pages
-    const createAccount = new CreateAccount( request );
-    const updateAccount = new UpdateAccount( request );
-    const createOrder = new CreateOrder( request );
-    const createAsset = new CreateAsset( request );
+		// Objects of pages
+		const createAccount = new CreateAccount( request );
+		// const updateAccount = new UpdateAccount(request);
+		const createOrder = new CreateOrder( request );
+		const createAsset = new CreateAsset( request );
 
-    // Step 1:
-    await createAccount.newAccount( acccountType, accountName );
+		// Step 1:
+		await createAccount.newAccount( accountType, accountName );
 
-    // Step 2:
-    await createOrder.newOrder(
-      process.env.accountId,
-      orderStartDate,
-      orderPriceList,
-      orderStatus,
-    );
+		// Step 2:
+		await createOrder.newOrder( process.env.ACCOUNT_ID, orderStartDate, orderPriceList, orderStatus );
 
-    // Step 3:
-    await createOrder.createOrderItem(
-      process.env.orderId,
-      productName,
-      quantity,
-      unitPrice,
-    );
+		// Step 3:
+		await createOrder.createOrderItem( process.env.ORDER_ID, productName, quantity, unitPrice );
 
-    // Step 4:
-    await createAsset.newAsset(
-      process.env.accountId,
-      productName,
-      unitPrice,
-      quantity,
-    );
+		// Step 4:
+		await createAsset.newAsset( process.env.ACCOUNT_ID, productName, unitPrice, quantity );
 
-    // Step 5:
-    await createOrder.changeOrderStatus(
-      orderStatusChange,
-      process.env.currentOrderUrl,
-    );
-  });
+		// Step 5:
+		await createOrder.changeOrderStatus( orderStatusChange, process.env.CURRENT_ORDER_URL );
+	});
 }

@@ -8,12 +8,12 @@ import crypto from 'crypto';
 import opener from 'opener';
 
 function generateCodeVerifier() {
-	return crypto.randomBytes(32).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+	return crypto.randomBytes( 32 ).toString( 'base64' ).replace( /=/g, '' ).replace( /\+/g, '-' ).replace( /\//g, '_' );
 }
 
-function generateCodeChallenge(codeVerifier) {
-	const base64Digest = crypto.createHash('sha256').update(codeVerifier).digest('base64');
-	return base64Digest.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+function generateCodeChallenge( codeVerifier ) {
+	const base64Digest = crypto.createHash( 'sha256' ).update( codeVerifier ).digest( 'base64' );
+	return base64Digest.replace( /=/g, '' ).replace( /\+/g, '-' ).replace( /\//g, '_' );
 }
 
 /**
@@ -35,23 +35,23 @@ function createServer() {
 
 	// Step 2:
 	const options = {
-		key: fs.readFileSync(process.env.KEY_PEM_PATH),
-		cert: fs.readFileSync(process.env.CERT_PEM_PATH),
+		key: fs.readFileSync( process.env.KEY_PEM_PATH ),
+		cert: fs.readFileSync( process.env.CERT_PEM_PATH ),
 	};
 
-	const server = https.createServer(options, app);
-	server.listen(port, () => {
-		console.log(`Start server on port ${port}`);
+	const server = https.createServer( options, app );
+	server.listen( port, () => {
+		console.log( `Start server on port ${port}` );
 	});
 
 	// Step 3:
 	// let authorizationCode = null;
-	app.get('/callback', (req, res) => {
+	app.get( '/callback', ( req, res ) => {
 		process.env.authorizationCode = req.query.code;
-		console.log('Authorization code received:', process.env.authorizationCode);
+		console.log( 'Authorization code received:', process.env.authorizationCode );
 		//res.send('You can close this window.');
-		res.writeHead(200, { 'Content-Type': 'text/plain' });
-		res.end('You can close this window now.');
+		res.writeHead( 200, { 'Content-Type': 'text/plain' });
+		res.end( 'You can close this window now.' );
 	});
 
 	return server;
@@ -108,8 +108,8 @@ export const getAccessToken = async () => {
 	// Reccurring kako da proveram.
 	// Za hybrid kako ke bide scenarioto.
 
-	console.log(process.env.NODE_ENV);
-	console.log(sfUrl);
+	console.log( process.env.NODE_ENV );
+	console.log( sfUrl );
 
 	// create and start the server
 	let server = createServer();
@@ -117,20 +117,20 @@ export const getAccessToken = async () => {
 
 	// Generate code verifier and code challenge
 	const codeVerifier = generateCodeVerifier();
-	const codeChallenge = generateCodeChallenge(codeVerifier);
+	const codeChallenge = generateCodeChallenge( codeVerifier );
 
-	await expect(async () => {
+	await expect( async () => {
 		// Step 3:
-		const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-		let childProcess = await opener(authUrl);
+		const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent( redirectUri )}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+		let childProcess = await opener( authUrl );
 		// const pid = childProcess.pid;
 
-		childProcess.on('exit', (code, signal) => {
-			console.log(`Child process exited with code ${code} and signal ${signal}`);
+		childProcess.on( 'exit', ( code, signal ) => {
+			console.log( `Child process exited with code ${code} and signal ${signal}` );
 		});
 
-		while (!process.env.authorizationCode) {
-			await new Promise((resolve) => setTimeout(resolve, 1000));
+		while ( !process.env.authorizationCode ) {
+			await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
 		}
 
 		// childProcess.kill('SIGINT');
@@ -140,7 +140,7 @@ export const getAccessToken = async () => {
 		let response;
 		let data;
 		try {
-			response = await fetch(tokenEndpoint, {
+			response = await fetch( tokenEndpoint, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
@@ -153,9 +153,9 @@ export const getAccessToken = async () => {
 				}),
 			});
 
-			if (!response.ok) {
+			if ( !response.ok ) {
 				const responseText = await response.text();
-				console.warn('Response status: ' + response.status + ', Status text: ' + response.statusText + ', Response text: ' + responseText);
+				console.warn( 'Response status: ' + response.status + ', Status text: ' + response.statusText + ', Response text: ' + responseText );
 				//throw new Error(`Error exchanging code: ${response.status} ${response.statusText} ${responseText}`);
 			}
 
@@ -164,9 +164,9 @@ export const getAccessToken = async () => {
 
 			// Step 5:
 			process.env.ACCESS_TOKEN = await data.access_token;
-			console.log('SF Token: ' + process.env.ACCESS_TOKEN);
-		} catch (error) {
-			console.error('Error in token exchange:', error);
+			console.log( 'SF Token: ' + process.env.ACCESS_TOKEN );
+		} catch ( error ) {
+			console.error( 'Error in token exchange:', error );
 			throw error;
 		} finally {
 			//process.kill(childProcess);
@@ -183,10 +183,10 @@ export const getAccessToken = async () => {
 			// }, 2000);
 			server.close();
 			childProcess.kill();
-			console.log(childProcess.killed);
+			console.log( childProcess.killed );
 		}
 	}).toPass({
-		intervals: [2_000, 5_000, 10_000],
+		intervals: [ 2_000, 5_000, 10_000 ],
 		timeout: 26_000,
 	});
 };
@@ -209,11 +209,11 @@ const getAuthCode = async () => {
 	const sfUrl = process.env.SF_URL;
 	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
 
-	await expect(async () => {
+	await expect( async () => {
 		let accessToken;
 		try {
 			// Step 1:
-			const response = await fetch(tokenEndpoint, {
+			const response = await fetch( tokenEndpoint, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
@@ -225,9 +225,9 @@ const getAuthCode = async () => {
 				}),
 			});
 
-			if (!response.ok) {
+			if ( !response.ok ) {
 				const responseText = await response.text();
-				throw new Error(`Authentication failed: ${response.status} ${response.statusText}\nResponse Body: ${responseText}`);
+				throw new Error( `Authentication failed: ${response.status} ${response.statusText}\nResponse Body: ${responseText}` );
 			}
 
 			// Step 2:
@@ -236,13 +236,13 @@ const getAuthCode = async () => {
 
 			// Step 3:
 			process.env.ACCESS_TOKEN = accessToken;
-			console.log('SF Token: ' + process.env.ACCESS_TOKEN);
-		} catch (error) {
-			console.error('Error obtaining access token:', error);
+			console.log( 'SF Token: ' + process.env.ACCESS_TOKEN );
+		} catch ( error ) {
+			console.error( 'Error obtaining access token:', error );
 			throw error;
 		}
 	}).toPass({
-		intervals: [2_000, 5_000, 10_000],
+		intervals: [ 2_000, 5_000, 10_000 ],
 		timeout: 20_000,
 	});
 };
@@ -277,32 +277,32 @@ export const getAccessTokenOld = async () => {
 	process.env.COMMON_ASSET_URL = process.env.COMMON_URL + process.env.ASSET_ENDPOINT;
 	process.env.COMMON_PRICING_VARIABLE_URL = process.env.COMMON_URL + process.env.PRICING_VARIABLE_ENDPOINT;
 
-	console.log(process.env.NODE_ENV);
-	console.log(sfUrl);
+	console.log( process.env.NODE_ENV );
+	console.log( sfUrl );
 	let page;
 
-	await expect(async () => {
+	await expect( async () => {
 		// Step 1:
 		const browser = await chromium.launch();
 		const context = await browser.newContext();
 		page = await context.newPage();
 
-		await page.goto(`${authorizationUrl}?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${redirectUri}`);
-		await page.fill('#username', process.env.SF_USERNAME);
-		await page.fill('#password', process.env.SF_PASSWORD);
-		await page.click("//input[@id='Login']");
+		await page.goto( `${authorizationUrl}?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${redirectUri}` );
+		await page.fill( '#username', process.env.SF_USERNAME );
+		await page.fill( '#password', process.env.SF_PASSWORD );
+		await page.click( "//input[@id='Login']" );
 
 		// Step 2:
 		const redirectUrl = page.url();
 		//  console.log(redirectUrl);
 
-		const redirectUrlObj = new URL(redirectUrl);
+		const redirectUrlObj = new URL( redirectUrl );
 		//console.log(redirectUrlObj);
 
-		const rawAuthorizationCode = redirectUrlObj.searchParams.get('code');
+		const rawAuthorizationCode = redirectUrlObj.searchParams.get( 'code' );
 		//console.log("rawAuthorizationCode: " + rawAuthorizationCode);
 
-		const authorizationCode = decodeURIComponent(rawAuthorizationCode);
+		const authorizationCode = decodeURIComponent( rawAuthorizationCode );
 		// console.log("authorizationCode: " + authorizationCode);
 
 		// Step 3:
@@ -310,7 +310,7 @@ export const getAccessTokenOld = async () => {
 		let data;
 		let accessToken;
 		try {
-			response = await fetch(tokenEndpoint, {
+			response = await fetch( tokenEndpoint, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
@@ -323,24 +323,24 @@ export const getAccessTokenOld = async () => {
 			});
 
 			// console.log(response);
-			if (!response.ok) {
+			if ( !response.ok ) {
 				const responseText = await response.text();
-				console.warn('Response status: ' + response.status + ', Status text: ' + response.statusText + ', Response text: ' + responseText);
+				console.warn( 'Response status: ' + response.status + ', Status text: ' + response.statusText + ', Response text: ' + responseText );
 				//throw new Error(`Error exchanging code: ${response.status} ${response.statusText} ${responseText}`);
 			}
 
 			data = await response.json();
 			accessToken = await data.access_token;
-		} catch (error) {
-			console.error('Error in token exchange:', error);
+		} catch ( error ) {
+			console.error( 'Error in token exchange:', error );
 			throw error;
 		}
 
 		// Step 4:
 		process.env.ACCESS_TOKEN = accessToken;
-		console.log('SF Token: ' + process.env.ACCESS_TOKEN);
+		console.log( 'SF Token: ' + process.env.ACCESS_TOKEN );
 	}).toPass({
-		intervals: [2_000, 5_000, 10_000],
+		intervals: [ 2_000, 5_000, 10_000 ],
 		timeout: 20_000,
 	});
 };

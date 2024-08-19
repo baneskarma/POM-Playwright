@@ -36,7 +36,7 @@ export async function verify5GNetworkVoice() {
 		await verifyProduct.verifyProductExists( productName, productCode, false );
 
 		// Step 2:
-		await verifyProduct.verifyProductDetails( process.env.currentProductUrl, productDetails );
+		await verifyProduct.verifyProductDetails( process.env.CURRENT_PRODUCT_URL, productDetails );
 
 		// Step 3:
 	});

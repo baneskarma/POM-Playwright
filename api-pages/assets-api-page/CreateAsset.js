@@ -6,9 +6,9 @@ import { Verifications } from '../verifications/Verifications';
  * **PAGES : CPQ : ASSETS** [Create]: Create New Asset
  */
 export class CreateAsset {
-	constructor(request) {
+	constructor( request ) {
 		this.request = request;
-		this.verifications = new Verifications(this.request);
+		this.verifications = new Verifications( this.request );
 	}
 
 	/**
@@ -24,14 +24,14 @@ export class CreateAsset {
 	 * @param {string} price - The price of the product
 	 * @param {string} quantity - The quantity of the product
 	 */
-	async newAsset(accountId, productName, price, quantity) {
-		await allure.step('Create new Asset', async () => {
+	async newAsset( accountId, productName, price, quantity ) {
+		await allure.step( 'Create new Asset', async () => {
 			let assetData;
 
-			const productId = await this.getProductId(productName);
+			const productId = await this.getProductId( productName );
 			//console.log(productId);
 
-			await allure.step('Store Asset Data', async () => {
+			await allure.step( 'Store Asset Data', async () => {
 				assetData = {
 					Name: productName,
 					AccountId: accountId,
@@ -42,35 +42,35 @@ export class CreateAsset {
 			});
 
 			try {
-				const response = await this.request.post(process.env.COMMON_ASSET_URL, {
+				const response = await this.request.post( process.env.COMMON_ASSET_URL, {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 						'Content-Type': 'application/json',
 					},
-					data: JSON.stringify(assetData),
+					data: JSON.stringify( assetData ),
 				});
 
-				await this.verifications.verifyResponse(response, 201);
+				await this.verifications.verifyResponse( response, 201 );
 
-				await allure.step('Retrieving response data', async () => {
+				await allure.step( 'Retrieving response data', async () => {
 					const responseData = await response.json();
-					console.log('Response from creating asset is Success:', responseData);
+					console.log( 'Response from creating asset is Success:', responseData );
 
-					await allure.step('Store Asset ID', async () => {
+					await allure.step( 'Store Asset ID', async () => {
 						const assetId = await responseData.id;
 						process.env.ASSET_ID = assetId;
 						//console.log("Asset ID: " + process.env.ASSET_ID);
 					});
 
-					await allure.step('Store Asset Url', async () => {
+					await allure.step( 'Store Asset Url', async () => {
 						const assetUrl = process.env.COMMON_ASSET_URL + process.env.ASSET_ID;
 						process.env.CURRENT_ASSET_URL = assetUrl;
 					});
 				});
 
-				await this.verifications.verifyObjectIdAndData('Asset', process.env.ASSET_ID, process.env.CURRENT_ASSET_URL, assetData);
-			} catch (error) {
-				console.error('Asset creation failed:', error);
+				await this.verifications.verifyObjectIdAndData( 'Asset', process.env.ASSET_ID, process.env.CURRENT_ASSET_URL, assetData );
+			} catch ( error ) {
+				console.error( 'Asset creation failed:', error );
 				throw error;
 			}
 		});
@@ -84,11 +84,11 @@ export class CreateAsset {
 	 *
 	 * @param {string} productName - The name of the product
 	 */
-	async getProductId(productName) {
+	async getProductId( productName ) {
 		let productId;
-		await allure.step('Get id for the product: ' + productName, async () => {
+		await allure.step( 'Get id for the product: ' + productName, async () => {
 			try {
-				const response = await this.request.get(process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+Product2', {
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+Product2', {
 					headers: {
 						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 					},
@@ -96,17 +96,17 @@ export class CreateAsset {
 
 				const responseData = await response.json();
 				const records = responseData.records;
-				for (const record of records) {
-					if (record.Name === productName) {
+				for ( const record of records ) {
+					if ( record.Name === productName ) {
 						productId = record.Id;
 						// console.log("The id of product: " + productId);
 						return productId;
 					}
 				}
 
-				throw new Error('There is no product with name: ' + productName);
-			} catch (error) {
-				console.error('Getting Product ID failed:', error);
+				throw new Error( 'There is no product with name: ' + productName );
+			} catch ( error ) {
+				console.error( 'Getting Product ID failed:', error );
 				throw error;
 			}
 		});

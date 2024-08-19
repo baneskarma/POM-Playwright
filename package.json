@@ -10,6 +10,7 @@
     "api-ui": "npx playwright test ApiSuite.spec.js --project=edge --ui",
     "test-ui": "npx playwright test TestSuite.spec.js --project=edge --ui",
     "lint-project": "npx eslint .",
+    "lint-fix-project": "npx eslint --fix .",
     "prepare": "husky install"
   },
   "keywords": [],
