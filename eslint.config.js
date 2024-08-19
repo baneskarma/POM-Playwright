@@ -94,7 +94,7 @@ export default [
 			// ],
 			'stylistic/space-in-parens': ['warn', 'always', { exceptions: ['{}', 'empty'] }],
 			'stylistic/array-bracket-spacing': ['warn', 'always', { objectsInArrays: false }],
-			'object-curly-newline': ['error', { multiline: true, consistent: false }],
+			'object-curly-newline': ['error', { multiline: true, consistent: true }],
 			'no-unused-vars': 'warn',
 			'comma-spacing': ['error', { before: false, after: true }],
 			'no-restricted-syntax': [

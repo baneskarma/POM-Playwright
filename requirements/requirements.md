@@ -130,3 +130,23 @@
 
 ### 4.2. Open Playwright Test explorer.
 -  Command: ctrl + p ctrl + l
+
+## 5. Self Signed Certificate
+- Command: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nodes
+   - Use the command in a folder where is save to make these files. Preferably in a folder outside this project.
+- Explanation: 
+   -	openssl: This is the command-line tool you're using (OpenSSL).
+   - 	req: This subcommand is used for generating certificate signing requests (CSRs) and self-signed certificates.
+   -	-x509: This option tells OpenSSL to generate a self-signed certificate directly instead of a CSR.
+   -	-newkey rsa:4096: This generates a new RSA private key with a key size of 4096 bits. The larger the key size, the more secure the encryption, but it also might be slightly slower.
+   -	-keyout key.pem: This specifies the filename for the generated private key. It will be saved in Privacy-Enhanced Mail (PEM) format.
+   -	-out cert.pem: This specifies the filename for the generated certificate. It will also be saved in PEM format.
+   -	-days 3650: This sets the validity period of the certificate to 3650 days (10 years).
+   -	-nodes: This prevents OpenSSL from encrypting the private key with a passphrase. This is generally not recommended for production environments, but it can be convenient for development and testing.
+- Summary:
+   1.	Generates a new RSA private key.
+   2.	Creates a self-signed X.509 certificate using that key.
+   3.	Saves the private key to key.pem and the certificate to cert.pem.
+   4.	Sets the certificate's validity to 10 years.
+   5.	Does not encrypt the private key with a passphrase
+

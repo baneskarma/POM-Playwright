@@ -35,8 +35,8 @@ function createServer() {
 
 	// Step 2:
 	const options = {
-		key: fs.readFileSync(process.env.keyPemPath),
-		cert: fs.readFileSync(process.env.certPemPath),
+		key: fs.readFileSync(process.env.KEY_PEM_PATH),
+		cert: fs.readFileSync(process.env.CERT_PEM_PATH),
 	};
 
 	const server = https.createServer(options, app);
@@ -75,22 +75,21 @@ export const getAccessToken = async () => {
 	//  test('OAuth 2.0 Authorization Code Flow with Salesforce', async ({ page }) => {
 
 	// Configuration
-	const clientId = process.env.clientId;
-	const clientSecret = process.env.clientSecret;
-	const redirectUri = process.env.redirectUri;
-	const sfUrl = process.env.sfUrl;
-	const authorizationUrl = sfUrl + process.env.authorizationEndpoint;
-	const tokenEndpoint = sfUrl + process.env.tokenEndpoint;
+	const clientId = process.env.CLIENT_ID;
+	const clientSecret = process.env.CLIENT_SECRET;
+	const redirectUri = process.env.REDIRECT_URI;
+	const sfUrl = process.env.SF_URL;
+	const authorizationUrl = sfUrl + process.env.AUTHORIZATION_ENDPOINT;
+	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
-	process.env.commonAccountUrl = process.env.commonUrl + process.env.accountEndpoint;
-	process.env.commonOrderUrl = process.env.commonUrl + process.env.orderEndpoint;
-	process.env.commonProductUrl = process.env.commonUrl + process.env.productEndpoint;
-	process.env.commonPriceListUrl = process.env.commonUrl + process.env.priceListEndpoint;
-	process.env.commonOrderItemUrl = process.env.commonUrl + process.env.orderItemEndpoint;
-	process.env.commonAssetUrl = process.env.commonUrl + process.env.assetEndpoint;
-
-	process.env.commonPricingVariableUrl = process.env.commonUrl + process.env.pricingVariableEndpoint;
+	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
+	process.env.COMMON_ORDER_URL = process.env.COMMON_URL + process.env.ORDER_ENDPOINT;
+	process.env.COMMON_PRODUCT_URL = process.env.COMMON_URL + process.env.PRODUCT_ENDPOINT;
+	process.env.COMMON_PRICELIST_URL = process.env.COMMON_URL + process.env.PRICELIST_ENDPOINT;
+	process.env.COMMON_ORDER_ITEM_URL = process.env.COMMON_URL + process.env.ORDER_ITEM_ENDPOINT;
+	process.env.COMMON_ASSET_URL = process.env.COMMON_URL + process.env.ASSET_ENDPOINT;
+	process.env.COMMON_PRICING_VARIABLE_URL = process.env.COMMON_URL + process.env.PRICING_VARIABLE_ENDPOINT;
 	// soql query Fields(Standard)
 	//  query?q=SELECT+Fields(Standard)+FROM+vlocity_cmt__PricingVariable__c
 	// vlocity_cmt__Discount__c
@@ -164,8 +163,8 @@ export const getAccessToken = async () => {
 			// console.log(data);
 
 			// Step 5:
-			process.env.sfAccessToken = await data.access_token;
-			console.log('SF Token: ' + process.env.sfAccessToken);
+			process.env.ACCESS_TOKEN = await data.access_token;
+			console.log('SF Token: ' + process.env.ACCESS_TOKEN);
 		} catch (error) {
 			console.error('Error in token exchange:', error);
 			throw error;
@@ -205,10 +204,10 @@ export const getAccessToken = async () => {
  */
 const getAuthCode = async () => {
 	// Configuration
-	const clientId = process.env.clientId;
-	const clientSecret = process.env.clientSecret;
-	const sfUrl = process.env.sfUrl;
-	const tokenEndpoint = sfUrl + process.env.tokenEndpoint;
+	const clientId = process.env.CLIENT_ID;
+	const clientSecret = process.env.CLIENT_SECRET;
+	const sfUrl = process.env.SF_URL;
+	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	await expect(async () => {
 		let accessToken;
@@ -221,8 +220,8 @@ const getAuthCode = async () => {
 					grant_type: 'password',
 					client_id: clientId,
 					client_secret: clientSecret,
-					username: process.env.sfUsername,
-					password: process.env.sfPassword,
+					username: process.env.SF_USERNAME,
+					password: process.env.SF_PASSWORD,
 				}),
 			});
 
@@ -236,13 +235,16 @@ const getAuthCode = async () => {
 			accessToken = data.access_token;
 
 			// Step 3:
-			process.env.sfAccessToken = accessToken;
-			console.log('SF Token: ' + process.env.sfAccessToken);
+			process.env.ACCESS_TOKEN = accessToken;
+			console.log('SF Token: ' + process.env.ACCESS_TOKEN);
 		} catch (error) {
 			console.error('Error obtaining access token:', error);
 			throw error;
 		}
-	}).toPass({ intervals: [2_000, 5_000, 10_000], timeout: 20_000 });
+	}).toPass({
+		intervals: [2_000, 5_000, 10_000],
+		timeout: 20_000,
+	});
 };
 
 /**
@@ -259,21 +261,21 @@ const getAuthCode = async () => {
  */
 export const getAccessTokenOld = async () => {
 	// Configuration
-	const clientId = process.env.clientId;
-	const clientSecret = process.env.clientSecret;
-	const redirectUri = process.env.redirectUri;
-	const sfUrl = process.env.sfUrl;
-	const authorizationUrl = sfUrl + process.env.authorizationEndpoint;
-	const tokenEndpoint = sfUrl + process.env.tokenEndpoint;
+	const clientId = process.env.CLIENT_ID;
+	const clientSecret = process.env.CLIENT_SECRET;
+	const redirectUri = process.env.REDIRECT_URI;
+	const sfUrl = process.env.SF_URL;
+	const authorizationUrl = sfUrl + process.env.AUTHORIZATION_ENDPOINT;
+	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
-	process.env.commonAccountUrl = process.env.commonUrl + process.env.accountEndpoint;
-	process.env.commonOrderUrl = process.env.commonUrl + process.env.orderEndpoint;
-	process.env.commonProductUrl = process.env.commonUrl + process.env.productEndpoint;
-	process.env.commonPriceListUrl = process.env.commonUrl + process.env.priceListEndpoint;
-	process.env.commonOrderItemUrl = process.env.commonUrl + process.env.orderItemEndpoint;
-	process.env.commonAssetUrl = process.env.commonUrl + process.env.assetEndpoint;
-	process.env.commonPricingVariableUrl = process.env.commonUrl + process.env.pricingVariableEndpoint;
+	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
+	process.env.COMMON_ORDER_URL = process.env.COMMON_URL + process.env.ORDER_ENDPOINT;
+	process.env.COMMON_PRODUCT_URL = process.env.COMMON_URL + process.env.PRODUCT_ENDPOINT;
+	process.env.COMMON_PRICELIST_URL = process.env.COMMON_URL + process.env.PRICELIST_ENDPOINT;
+	process.env.COMMON_ORDER_ITEM_URL = process.env.COMMON_URL + process.env.ORDER_ITEM_ENDPOINT;
+	process.env.COMMON_ASSET_URL = process.env.COMMON_URL + process.env.ASSET_ENDPOINT;
+	process.env.COMMON_PRICING_VARIABLE_URL = process.env.COMMON_URL + process.env.PRICING_VARIABLE_ENDPOINT;
 
 	console.log(process.env.NODE_ENV);
 	console.log(sfUrl);
@@ -285,9 +287,9 @@ export const getAccessTokenOld = async () => {
 		const context = await browser.newContext();
 		page = await context.newPage();
 
-		await page.goto(`${process.env.sfUrl + process.env.authorizationEndpoint}?response_type=code&client_id=${process.env.clientId}&redirect_uri=${redirectUri}`);
-		await page.fill('#username', process.env.sfUsername);
-		await page.fill('#password', process.env.sfPassword);
+		await page.goto(`${authorizationUrl}?response_type=code&client_id=${process.env.CLIENT_ID}&redirect_uri=${redirectUri}`);
+		await page.fill('#username', process.env.SF_USERNAME);
+		await page.fill('#password', process.env.SF_PASSWORD);
 		await page.click("//input[@id='Login']");
 
 		// Step 2:
@@ -335,8 +337,8 @@ export const getAccessTokenOld = async () => {
 		}
 
 		// Step 4:
-		process.env.sfAccessToken = accessToken;
-		console.log('SF Token: ' + process.env.sfAccessToken);
+		process.env.ACCESS_TOKEN = accessToken;
+		console.log('SF Token: ' + process.env.ACCESS_TOKEN);
 	}).toPass({
 		intervals: [2_000, 5_000, 10_000],
 		timeout: 20_000,

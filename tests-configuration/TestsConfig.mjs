@@ -71,9 +71,14 @@ export const beforeAllTests = async () => {
  */
 export const beforeEachTest = async () => {
 	//export async function beforeEachTest() {
+	// const isGitHubActions = process.env.CI === 'true';
 
-	//const loginPage = new LoginPage(page);
-	await loginPage.login(process.env.sfUsername, process.env.sfPassword, false);
+	// const username = isGitHubActions ? '${{ secrets.SFUSERNAME }}' : process.env.sfUsername;
+
+	// const password = isGitHubActions ? '${{ secrets.SFPASSWORD }}' : process.env.sfPassword;
+
+	// await loginPage.login(username, password, false);
+	await loginPage.login(process.env.SF_USERNAME, process.env.SF_PASSWORD, false);
 };
 
 /**

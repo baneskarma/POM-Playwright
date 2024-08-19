@@ -3,9 +3,9 @@
   "parser": "flow",
   "semi": true,
   "trailingComma": "es5",
-  "object-curly-newline": [{ "multiline": true, "consistent": false }],
+  "object-curly-newline": [{ "multiline": true, "consistent": true }],
   "printWidth": 10000,
-  "newline-per-chained-call": false,
+  "newline-per-chained-call": true,
   "array-spacing": true,
   "array-bracket-newline": true,
   "bracketSpacing": true,
@@ -13,6 +13,6 @@
   "useTabs": true,
   "editor.formatOnSave": true,
   "function-call-argument-newline": true,
-  "parenSpacing": true,
-  "@wordpress/prettier-config": true
+  "space-in-parens": true,
+  "quoteProps": "as-needed"
 }

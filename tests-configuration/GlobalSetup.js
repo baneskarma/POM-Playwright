@@ -14,7 +14,8 @@ export default async function globalSetup() {
 		if (!isCI) {
 			execSync('rm -rf allure-results && rm -rf videos', { stdio: 'inherit' });
 		}
-		if (process.env.api === 'true') {
+
+		if (process.env.API === 'true') {
 			await getAccessToken();
 		}
 	} catch (error) {

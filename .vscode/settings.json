@@ -8,10 +8,10 @@
   	"overrideConfigFile": "./eslint.config.js"
   },
   "prettier.configPath": ".prettierrc", // ".prettierrc", "./eslint.config.js"
-  // "prettier.useTabs": true,
-  // "prettier.bracketSpacing": true,
+  "prettier.prettierPath": "./node_modules/prettier",
   "editor.defaultFormatter": "esbenp.prettier-vscode", //"esbenp.prettier-vscode" or "dbaeumer.vscode-eslint"
   "editor.formatOnSave": true,
+  "editor.detectIndentation": false,
   // "editor.tabSize": 4,
   "eslint.validate": [
     "javascript",
