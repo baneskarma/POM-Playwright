@@ -1,0 +1,15 @@
+# Playwright Specific
+test-results/
+allure-results/
+allure-report/
+playwright-report
+
+# Node
+node_modules/
+
+# IDE - VSCode
+.vscode/*
+
+# Configuration and JSON files
+# **/*config.js 
+**/*.json
