@@ -18,7 +18,7 @@ import { allure } from 'allure-playwright';
  * 5. Submit order and check if product is in the account. <br>
  */
 export async function order5GNetworkVoiceToBusiness() {
-	test( '5GNetwork-VoiceToBusiness', async ( /**{homePage, createAccount, createOrder}*/ ) => {
+	test( 'A5GNetworkVoiceToBusiness', async ( /**{homePage, createAccount, createOrder}*/ ) => {
 		allure.description( "Order product '5G Network - Voice' through business account with B2B product price list." );
 
 		// Values for methods

@@ -8,6 +8,7 @@
 - playwright.yml file to run the project on github actions.
 - Environment files that contain sensitive information.
 - Custom rules for formatting and linting using eslint and prettier. You need to have eslint and prettier as vscode extensions.
+- It uses husky to run eslint --fix on the staged files before commiting them to git.
 
 ## 2. Test Cases
 
@@ -116,6 +117,9 @@
 
 9. Install plugin for formatting filenames and directories.
    - npm install eslint-plugin-check-file --save-dev
+
+10. Install staged plugin for linting only staged files before commiting them.
+    - npm install lint-staged --save-dev
    
 ### 3.2. Husky
 1. Install husky dependency, and create a .husky file
@@ -133,7 +137,7 @@
 
 ## 5. Self Signed Certificate
 - Command: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nodes
-   - Use the command in a folder where is save to make these files. Preferably in a folder outside this project.
+   - Use the bash command in a folder where is save to make these files. Preferably in a folder outside this project.
 - Explanation: 
    -	openssl: This is the command-line tool you're using (OpenSSL).
    - 	req: This subcommand is used for generating certificate signing requests (CSRs) and self-signed certificates.

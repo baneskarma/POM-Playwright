@@ -20,7 +20,7 @@ import { CreateAsset } from '../../api-pages/assets-api-page/CreateAsset';
  * 5. Activate the order.
  */
 export async function order5GNetworkVoiceToBusiness() {
-	test( 'API-5GNetwork-VoiceToBusiness', async ({ request }) => {
+	test( 'API-A5GNetworkVoiceToBusiness', async ({ request }) => {
 		allure.description( "Order product '5G Network - Voice' through business account with B2B product price list." );
 
 		// Variable Values

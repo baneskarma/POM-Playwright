@@ -13,6 +13,9 @@
     "lint-fix-project": "npx eslint --fix .",
     "prepare": "husky install"
   },
+  "lint-staged": {
+    "*.js": [ "eslint --fix" ]
+  },
   "keywords": [],
   "author": "Blagoja",
   "license": "ISC",
@@ -31,6 +34,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "globals": "^15.9.0",
     "husky": "^9.1.4",
+    "lint-staged": "^15.2.9",
     "prettier": "^3.3.3"
   },
   "dependencies": {

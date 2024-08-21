@@ -11,15 +11,15 @@ export default async function globalSetup() {
 	try {
 		// check if running on a CI environment
 		const isCI = process.env.CI === 'true';
-		if (!isCI) {
-			execSync('rm -rf allure-results && rm -rf videos', { stdio: 'inherit' });
+		if ( !isCI ) {
+			execSync( 'rm -rf allure-results && rm -rf videos', { stdio: 'inherit' });
 		}
 
-		if (process.env.API === 'true') {
+		if ( process.env.API === 'true' ) {
 			await getAccessToken();
 		}
-	} catch (error) {
-		console.error(error);
+	} catch ( error ) {
+		console.error( error );
 	}
 }
 

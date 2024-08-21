@@ -26,7 +26,7 @@ function generateCodeChallenge( codeVerifier ) {
  * 1. Create an express application with the same port as in the callback url.
  * 2. Set up SSL certificate and start the server(You will need ssl certificate to redirect from salesforce to a url with HTTPS, so the communication between salesforce and this server is encrypted).
  * 3. Extract the authorization code when a get method is requested for this application to the /callback endpoint.
- * **Note**: For now i am using a self signed certificate so there will be a 'Not Secure' warning in the browser of the redirected url.
+ *  - **Note**: For now i am using a self signed certificate so there will be a 'Not Secure' warning in the browser of the redirected url.
  */
 function createServer() {
 	// Step 1:
@@ -47,8 +47,8 @@ function createServer() {
 	// Step 3:
 	// let authorizationCode = null;
 	app.get( '/callback', ( req, res ) => {
-		process.env.authorizationCode = req.query.code;
-		console.log( 'Authorization code received:', process.env.authorizationCode );
+		process.env.AUTHORIZATION_CODE = req.query.code;
+		console.log( 'Authorization code received:', process.env.AUTHORIZATION_CODE );
 		//res.send('You can close this window.');
 		res.writeHead( 200, { 'Content-Type': 'text/plain' });
 		res.end( 'You can close this window now.' );
@@ -80,7 +80,7 @@ export const getAccessToken = async () => {
 	const redirectUri = process.env.REDIRECT_URI;
 	const sfUrl = process.env.SF_URL;
 	const authorizationUrl = sfUrl + process.env.AUTHORIZATION_ENDPOINT;
-	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
+	const tokenUrl = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
 	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
@@ -129,7 +129,7 @@ export const getAccessToken = async () => {
 			console.log( `Child process exited with code ${code} and signal ${signal}` );
 		});
 
-		while ( !process.env.authorizationCode ) {
+		while ( !process.env.AUTHORIZATION_CODE ) {
 			await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
 		}
 
@@ -140,12 +140,12 @@ export const getAccessToken = async () => {
 		let response;
 		let data;
 		try {
-			response = await fetch( tokenEndpoint, {
+			response = await fetch( tokenUrl, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
 					grant_type: 'authorization_code',
-					code: process.env.authorizationCode,
+					code: process.env.AUTHORIZATION_CODE,
 					client_id: clientId,
 					client_secret: clientSecret,
 					redirect_uri: redirectUri,
@@ -207,13 +207,13 @@ const getAuthCode = async () => {
 	const clientId = process.env.CLIENT_ID;
 	const clientSecret = process.env.CLIENT_SECRET;
 	const sfUrl = process.env.SF_URL;
-	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
+	const tokenUrl = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	await expect( async () => {
 		let accessToken;
 		try {
 			// Step 1:
-			const response = await fetch( tokenEndpoint, {
+			const response = await fetch( tokenUrl, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
@@ -266,7 +266,7 @@ export const getAccessTokenOld = async () => {
 	const redirectUri = process.env.REDIRECT_URI;
 	const sfUrl = process.env.SF_URL;
 	const authorizationUrl = sfUrl + process.env.AUTHORIZATION_ENDPOINT;
-	const tokenEndpoint = sfUrl + process.env.TOKEN_ENDPOINT;
+	const tokenUrl = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
 	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
@@ -310,7 +310,7 @@ export const getAccessTokenOld = async () => {
 		let data;
 		let accessToken;
 		try {
-			response = await fetch( tokenEndpoint, {
+			response = await fetch( tokenUrl, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({

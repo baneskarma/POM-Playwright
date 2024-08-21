@@ -29,6 +29,7 @@ export class CreateOrder {
 			//let priceListId;
 			let orderData;
 			let orderUrl;
+			let responseData;
 
 			const priceListId = await this.getPriceListId( priceListName );
 			//console.log(priceListId);
@@ -62,17 +63,17 @@ export class CreateOrder {
 				await this.verifications.verifyResponse( response, 201 );
 
 				await allure.step( 'Retrieving response data', async () => {
-					const responseData = await response.json();
+					responseData = await response.json();
 					console.log( 'Response from creating order is Success:', responseData );
 
 					await allure.step( 'Store Order ID', async () => {
 						const orderId = await responseData.id;
 						process.env.ORDER_ID = orderId;
-						//console.log("Order ID: " + process.env.orderId);
+						// console.log( 'Order ID: ' + process.env.orderId );
 					});
 
 					await allure.step( 'Store Order Url', async () => {
-						orderUrl = process.env.COMMON_ORDER_URL + process.env.orderId;
+						orderUrl = process.env.COMMON_ORDER_URL + process.env.ORDER_ID;
 						process.env.CURRENT_ORDER_URL = orderUrl;
 					});
 				});
@@ -98,10 +99,15 @@ export class CreateOrder {
 		let priceListId;
 		await allure.step( 'Get id for the price list: ' + priceListName, async () => {
 			try {
-				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__PriceList__c', { headers: { Authorization: `Bearer ${process.env.sfAccessToken}` } });
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__PriceList__c', {
+					headers: {
+						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+						'Content-Type': 'application/json',
+					},
+				});
 
 				const responseData = await response.json();
-				const records = responseData.records;
+				const records = await responseData.records;
 				for ( const record of records ) {
 					if ( record.Name === priceListName ) {
 						priceListId = record.Id;
@@ -277,11 +283,7 @@ export class CreateOrder {
 		let discountId;
 		await allure.step( 'Get id for the discount: ' + discountName, async () => {
 			try {
-				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__OrderDiscount__c', {
-					headers: {
-						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-					},
-				});
+				const response = await this.request.get( process.env.COMMON_URL + 'query?q=SELECT+Name,Id+FROM+vlocity_cmt__OrderDiscount__c', { headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN}` } });
 
 				const responseData = await response.json();
 				const records = responseData.records;
