@@ -53,7 +53,7 @@ export async function iPhone8ToBusinessB2B() {
 		await createAccount.newAccount( accountType, accountName );
 
 		// Step 2:
-		await updateAccount.billingAddress( process.env.ACCOUNT_ID, process.env.currentAccountUrl, billingData );
+		await updateAccount.billingAddress( process.env.ACCOUNT_ID, process.env.CURRENT_ACCOUNT_URL, billingData );
 
 		// Step 3:
 		await createOrder.newOrder( process.env.ACCOUNT_ID, orderStartDate, orderPriceList, orderStatus );

@@ -10,7 +10,7 @@ import { verify5GNetworkISP } from '../tests/api-tests/Verify5GNetworkISP.spec.j
 import { verify5GNetworkVoice } from '../tests/api-tests/Verify5GNetworkVoice.spec.js';
 
 //test.beforeAll(getAccessToken);
-test.describe.serial('Api Test Suite', () => {
+test.describe.serial( 'Api Test Suite', () => {
 	iPhone7ToConsumerB2C();
 	iPhone8ToBusinessB2B();
 	add10PercentDiscount6MonthsToResidential();

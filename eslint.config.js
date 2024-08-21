@@ -8,6 +8,7 @@ import stylisticJsPlugin from '@stylistic/eslint-plugin-js';
 import { parseForESLint } from '@typescript-eslint/parser';
 import typescriptEslint from '@typescript-eslint/eslint-plugin';
 import checkFile from 'eslint-plugin-check-file';
+import { eslintCustomRules } from './tests-configuration/eslint-custom-rules/EslintCustomRules.js';
 
 const { rules: compatRecommended } = compatPlugin.rules;
 const eslintRecommended = pluginJs.configs.recommended.rules;
@@ -71,6 +72,7 @@ export default [
 			stylistic: stylisticJsPlugin,
 			'@typescript-eslint': typescriptEslint,
 			'check-file': checkFile,
+			'eslint-custom-rules': eslintCustomRules,
 		},
 
 		ignores: [
@@ -84,7 +86,7 @@ export default [
 			'environments/.env*',
 			'**/*index.js',
 			'**/*config.js',
-			'**/*.json',
+			// '**/*.json',
 		],
 
 		rules: {
@@ -114,7 +116,7 @@ export default [
 			'no-unused-vars': 'warn',
 			'comma-spacing': ['warn', { before: false, after: true }],
 			'no-restricted-syntax': [
-				'warn',
+				'error',
 				{
 					selector: "CallExpression[callee.property.name='only']",
 					message: "We don't want to leave test.only on our tests",
@@ -124,7 +126,8 @@ export default [
 			'check-file/filename-naming-convention': [
 				'error',
 				{
-					'**/*.js': 'PASCAL_CASE', // PascalCase for all .js files
+					'**/*.js': 'PASCAL_CASE',
+					'**/*.json': 'FLAT_CASE',
 				},
 				{
 					ignoreMiddleExtensions: true,
@@ -139,24 +142,22 @@ export default [
 				},
 			],
 			// Enforce naming conventions
+
+			// Custom rule for environment variables
+			'eslint-custom-rules/env-vars-uppercase': 'error',
 			'@typescript-eslint/naming-convention': [
 				'error',
 				{
-					selector: 'variable',
+					selector: ['function', 'method', 'variable'],
 					format: ['camelCase'],
-					leadingUnderscore: 'allow', // Optional: allow leading underscores
-					trailingUnderscore: 'allow', // Optional: allow trailing underscores
-				},
-				{
-					selector: 'function',
-					format: ['camelCase'],
-					leadingUnderscore: 'allow',
-					trailingUnderscore: 'allow',
+					// leadingUnderscore: 'allow',
+					// trailingUnderscore: 'allow',
 				},
 				{
 					selector: 'class',
 					format: ['PascalCase'],
 				},
+
 				// {
 				// 	selector: 'property', // for object properties
 				// 	format: ['PascalCase'],
