@@ -152,8 +152,8 @@ export const getAccessToken = async () => {
 			await page.goto( authUrl );
 			await page.fill( '#username', process.env.SF_USERNAME );
 			await page.fill( '#password', process.env.SF_PASSWORD );
+			await page.click( "//input[@id='Login']" );
 			if ( !isCI ) {
-				await page.click( "//input[@id='Login']" );
 				const advanceButton = page.locator( '//button[@id="details-button"]' );
 				if ( advanceButton ) {
 					await advanceButton.click( advanceButton );
