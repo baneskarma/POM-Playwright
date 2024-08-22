@@ -145,7 +145,7 @@ export const getAccessToken = async () => {
 		let context;
 		let page;
 		try {
-			browser = await chromium.launch({ headless: true }); // { headless: true }
+			browser = await chromium.launch({ headless: false }); // { headless: true }
 			context = await browser.newContext();
 			page = await context.newPage();
 			// const redirectUrl = authResponse.url;
