@@ -153,21 +153,28 @@ export const getAccessToken = async () => {
 			await page.fill( '#username', process.env.SF_USERNAME );
 			await page.fill( '#password', process.env.SF_PASSWORD );
 			await page.click( "//input[@id='Login']" );
-			if ( !isCI ) {
-				const advanceButton = page.locator( '//button[@id="details-button"]' );
-				if ( advanceButton ) {
-					await advanceButton.click( advanceButton );
-					const proceed = page.locator( '//a[@id="proceed-link"]' );
-					await proceed.click();
-				}
+			// if (!isCI) {
+			const advanceButtonLocator = '//button[@id="details-button"]';
+			await expect( page.locator( advanceButtonLocator ) ).toBeVisible();
+			const advanceButton = page.locator( advanceButtonLocator );
+			if ( advanceButton ) {
+				await advanceButton.click( advanceButton );
+				const proceed = page.locator( '//a[@id="proceed-link"]' );
+				await proceed.click();
+				// }
 			}
 		} catch ( error ) {
 			console.error( 'Error in UI:', error );
 			throw error;
 		}
 
-		while ( !authorizationCode ) {
-			await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
+		try {
+			while ( !authorizationCode ) {
+				await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
+			}
+		} catch ( error ) {
+			console.error( 'Error getting authorization code:', error );
+			throw error;
 		}
 
 		await context.close();
