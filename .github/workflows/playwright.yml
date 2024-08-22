@@ -62,6 +62,9 @@ jobs:
             SSL_KEY: ${{ secrets.SSL_KEY }}
             SSL_CERT: ${{ secrets.SSL_CERT }}
 
+            AUTHORIZATION_ENDPOINT: ${{ secrets.AUTHORIZATION_ENDPOINT }}
+            TOKEN_ENDPOINT: ${{ secrets.TOKEN_ENDPOINT }}
+
             COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ACCOUNT_ENDPOINT }}
             COMMON_ORDER_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ORDER_ENDPOINT }}
             COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRODUCT_ENDPOINT }}
