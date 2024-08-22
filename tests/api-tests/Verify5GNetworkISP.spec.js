@@ -41,5 +41,6 @@ export async function verify5GNetworkISP() {
 		await verifyProduct.verifyProductDetails( process.env.CURRENT_PRODUCT_URL, productDetails );
 
 		// Step 3:
+		console.log( 'name change' );
 	});
 }
