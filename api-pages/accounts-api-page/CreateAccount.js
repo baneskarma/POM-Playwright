@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test';
 import { allure } from 'allure-playwright';
 import { Verifications } from '../verifications/Verifications';
+import core from '@actions/core';
 
 /**
  * **PAGES : CPQ : ACCOUNTS** [Create]: Create New Account
@@ -27,6 +28,7 @@ export class CreateAccount {
 			let response;
 			let accountUrl;
 			let accountData;
+			const accessToken = process.env.ACCESS_TOKEN || core.getInput( 'ACCESS_TOKEN' );
 
 			await allure.step( 'Store Account Data', async () => {
 				accountData = {
@@ -38,7 +40,7 @@ export class CreateAccount {
 			try {
 				response = await this.request.post( process.env.COMMON_ACCOUNT_URL, {
 					headers: {
-						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+						Authorization: `Bearer ${accessToken}`,
 						'Content-Type': 'application/json',
 					},
 					data: JSON.stringify( accountData ),
@@ -56,7 +58,6 @@ export class CreateAccount {
 					await allure.step( 'Store Account ID', async () => {
 						const accountId = await responseData.id;
 						process.env.ACCOUNT_ID = accountId;
-						// process.env[`accountId_${process.pid}`] = accountId;
 						//console.log("Account ID: " + process.env.ACCOUNT_ID);
 					});
 

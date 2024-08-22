@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # Trigger the workflow manually
 
   schedule:
-    - cron: "30 9 * * 0-4"
+    - cron: "30 9 * * 1-5"
 
   push:
     branches: [blagoja, main]
@@ -17,6 +17,7 @@ jobs:
   test:
     timeout-minutes: 20
     runs-on: ubuntu-latest
+    environment: sandbox
     # needs: setup
     steps:
       # - name: Install Allure
@@ -46,7 +47,7 @@ jobs:
       #   run: npm install -g allure-commandline --save-dev
 
       - name: Run Playwright tests
-        run: xvfb-run npx playwright test TestSuite.spec.js --project=chromium || true
+        run: xvfb-run npx playwright test --project=edge || true
         env:
             API: ${{ secrets.API }}
             BASE_URL: ${{ secrets.BASE_URL }}
@@ -58,9 +59,16 @@ jobs:
 
             SF_USERNAME: ${{ secrets.SF_USERNAME }}
             SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-            # KEY_PEM_PATH: ${{ secrets.KEY_PEM_PATH }}
-            # CERT_PEM_PATH: ${{ secrets.CERT_PEM_PATH }}
+            SSL_KEY: ${{ secrets.SSL_KEY }}
+            SSL_CERT: ${{ secrets.SSL_CERT }}
 
+            COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ACCOUNT_ENDPOINT }}
+            COMMON_ORDER_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ORDER_ENDPOINT }}
+            COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRODUCT_ENDPOINT }}
+            COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRICELIST_ENDPOINT }}
+            COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ORDER_ITEM_ENDPOINT }}
+            COMMON_ASSET_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ASSET_ENDPOINT }}
+            COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRICING_VARIABLE_ENDPOINT }}
 
       # - name: Upload Allure Results
       # uses: actions/upload-artifact@v4

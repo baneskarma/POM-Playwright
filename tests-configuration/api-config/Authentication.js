@@ -1,11 +1,15 @@
-import { test, expect, chromium } from '@playwright/test';
-//import { LoginPage } from '../pages/login-page/LoginPage.js';
-//import { loginPage } from '../tests-configuration/TestsConfig.mjs';
+import { expect, chromium } from '@playwright/test';
+import core from '@actions/core';
+//const core = require( '@actions/core' );
+
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
 import crypto from 'crypto';
-import opener from 'opener';
+// import opener from 'opener';
+
+const isCI = process.env.CI === 'true';
+let authorizationCode;
 
 function generateCodeVerifier() {
 	return crypto.randomBytes( 32 ).toString( 'base64' ).replace( /=/g, '' ).replace( /\+/g, '-' ).replace( /\//g, '_' );
@@ -34,10 +38,20 @@ function createServer() {
 	const port = 3000; // if you change the port you should also change the redirect uri in salesforce
 
 	// Step 2:
-	const options = {
-		key: fs.readFileSync( process.env.KEY_PEM_PATH ),
-		cert: fs.readFileSync( process.env.CERT_PEM_PATH ),
-	};
+	let options;
+	if ( isCI ) {
+		// if key and cert files are encoded in .txt extension use this:
+		options = {
+			key: Buffer.from( process.env.SSL_KEY, 'base64' ).toString(), // Decode the key
+			cert: Buffer.from( process.env.SSL_CERT, 'base64' ).toString(), // Decode the certificate
+		};
+	} else {
+		// if key and cert files are NOT encoded from the .pem extension use this:
+		options = {
+			key: fs.readFileSync( process.env.KEY_PEM_PATH ),
+			cert: fs.readFileSync( process.env.CERT_PEM_PATH ),
+		};
+	}
 
 	const server = https.createServer( options, app );
 	server.listen( port, () => {
@@ -45,10 +59,11 @@ function createServer() {
 	});
 
 	// Step 3:
-	// let authorizationCode = null;
+
 	app.get( '/callback', ( req, res ) => {
-		process.env.AUTHORIZATION_CODE = req.query.code;
-		console.log( 'Authorization code received:', process.env.AUTHORIZATION_CODE );
+		authorizationCode = req.query.code;
+		// process.env.AUTHORIZATION_CODE = authorizationCode;
+		console.log( 'Authorization code received:', authorizationCode );
 		//res.send('You can close this window.');
 		res.writeHead( 200, { 'Content-Type': 'text/plain' });
 		res.end( 'You can close this window now.' );
@@ -64,15 +79,14 @@ function createServer() {
  * - This method has functionality to get authorization code from salesforce and exchange it for an access token.
  *
  * *Steps of this scenario* :
- * 1. Create an express application which will act as a simple web server to handle the callback from Salesforce during the OAuth 2.0 authorization code grant flow.
- * 2. Construct Authorization URL and open it in the user's default browser, then wait for the authorization code to be received by the callback server.
+ * 1. Create and start the server, then generate the code challenge.
+ * 2. Construct Authorization URL, open it and login, then wait for the authorization code to be received by the callback server.
  * 3. Exchange code for access token through a post request.
- * 4. Save the access token to the environment variable sfAccessToken.
+ * 4. Save the access token to the environment variable ACCESS_TOKEN.
  * **Note**: For now i am using a self signed certificate so there will be a 'Not Secure' warning in the browser of the redirected url.
  */
 export const getAccessToken = async () => {
 	//export async function  getAccessToken() {
-	//  test('OAuth 2.0 Authorization Code Flow with Salesforce', async ({ page }) => {
 
 	// Configuration
 	const clientId = process.env.CLIENT_ID;
@@ -111,7 +125,7 @@ export const getAccessToken = async () => {
 	console.log( process.env.NODE_ENV );
 	console.log( sfUrl );
 
-	// create and start the server
+	// Step 1:
 	let server = createServer();
 	//process.env.server = server;
 
@@ -119,24 +133,45 @@ export const getAccessToken = async () => {
 	const codeVerifier = generateCodeVerifier();
 	const codeChallenge = generateCodeChallenge( codeVerifier );
 
+	// Step 2:
 	await expect( async () => {
-		// Step 3:
 		const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent( redirectUri )}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-		let childProcess = await opener( authUrl );
-		// const pid = childProcess.pid;
+		// let childProcess = await opener(authUrl);
 
-		childProcess.on( 'exit', ( code, signal ) => {
-			console.log( `Child process exited with code ${code} and signal ${signal}` );
-		});
+		// childProcess.on('exit', (code, signal) => {
+		// 	console.log(`Child process exited with code ${code} and signal ${signal}`);
+		// });
+		let browser;
+		let context;
+		let page;
+		try {
+			browser = await chromium.launch({ headless: true }); // { headless: true }
+			context = await browser.newContext();
+			page = await context.newPage();
+			// const redirectUrl = authResponse.url;
+			await page.goto( authUrl );
+			await page.fill( '#username', process.env.SF_USERNAME );
+			await page.fill( '#password', process.env.SF_PASSWORD );
+			await page.click( "//input[@id='Login']" );
+			const advanceButton = page.locator( '//button[@id="details-button"]' );
+			if ( advanceButton ) {
+				await advanceButton.click( advanceButton );
+				const proceed = page.locator( '//a[@id="proceed-link"]' );
+				await proceed.click();
+			}
+		} catch ( error ) {
+			console.error( 'Error in UI:', error );
+			throw error;
+		}
 
-		while ( !process.env.AUTHORIZATION_CODE ) {
+		while ( !authorizationCode ) {
 			await new Promise( ( resolve ) => setTimeout( resolve, 1000 ) );
 		}
 
-		// childProcess.kill('SIGINT');
-		// process.kill(pid, "SIGINT");
+		await context.close();
+		await browser.close();
 
-		// Step 4:
+		// Step 3:
 		let response;
 		let data;
 		try {
@@ -145,7 +180,7 @@ export const getAccessToken = async () => {
 				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 				body: new URLSearchParams({
 					grant_type: 'authorization_code',
-					code: process.env.AUTHORIZATION_CODE,
+					code: authorizationCode,
 					client_id: clientId,
 					client_secret: clientSecret,
 					redirect_uri: redirectUri,
@@ -159,34 +194,28 @@ export const getAccessToken = async () => {
 				//throw new Error(`Error exchanging code: ${response.status} ${response.statusText} ${responseText}`);
 			}
 
+			// Step 4:
+
 			data = await response.json();
 			// console.log(data);
 
-			// Step 5:
-			process.env.ACCESS_TOKEN = await data.access_token;
-			console.log( 'SF Token: ' + process.env.ACCESS_TOKEN );
+			const accessToken = await data.access_token;
+			process.env.ACCESS_TOKEN = accessToken;
+			console.log( 'SF Token: ' + accessToken );
+			core.setOutput( 'ACCESS_TOKEN', accessToken );
+			// if (isCI) {
+			// 	core.setOutput('ACCESS_TOKEN', accessToken);
+			// }
 		} catch ( error ) {
 			console.error( 'Error in token exchange:', error );
 			throw error;
 		} finally {
-			//process.kill(childProcess);
-			// process.kill(-childProcess.pid, "SIGTERM");
-			// setTimeout(() => {
-			//   try {
-			//     process.kill(-childProcess.pid, 0); // Throws an exception if the process is not found
-			//     console.warn("Child process did not terminate. Consider forceful termination or other solutions.");
-			//   } catch (e) {
-			//     if (e.code === 'ESRCH') {
-			//       console.log("Child process is closed. Browser is closed.");
-			//     };
-			//   };
-			// }, 2000);
 			server.close();
-			childProcess.kill();
-			console.log( childProcess.killed );
+			// childProcess.kill();
+			// console.log(childProcess.killed);
 		}
 	}).toPass({
-		intervals: [ 2_000, 5_000, 10_000 ],
+		intervals: [ 7_000, 14_000, 21_000 ],
 		timeout: 26_000,
 	});
 };

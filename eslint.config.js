@@ -54,7 +54,7 @@ export default [
 
 	// Shared configuration for both environments
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', 'tests-configuration/TestsConfig.mjs'],
 
 		languageOptions: {
 			ecmaVersion: 12,
