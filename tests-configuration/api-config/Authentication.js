@@ -97,16 +97,15 @@ export const getAccessToken = async () => {
 	const tokenUrl = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
-	console.log( 'AUTHENTICATION' );
-	console.log( process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT );
-	console.log( process.env.COMMON_ACCOUNT_URL );
-	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
-	process.env.COMMON_ORDER_URL = process.env.COMMON_URL + process.env.ORDER_ENDPOINT;
-	process.env.COMMON_PRODUCT_URL = process.env.COMMON_URL + process.env.PRODUCT_ENDPOINT;
-	process.env.COMMON_PRICELIST_URL = process.env.COMMON_URL + process.env.PRICELIST_ENDPOINT;
-	process.env.COMMON_ORDER_ITEM_URL = process.env.COMMON_URL + process.env.ORDER_ITEM_ENDPOINT;
-	process.env.COMMON_ASSET_URL = process.env.COMMON_URL + process.env.ASSET_ENDPOINT;
-	process.env.COMMON_PRICING_VARIABLE_URL = process.env.COMMON_URL + process.env.PRICING_VARIABLE_ENDPOINT;
+	if ( !isCI ) {
+		process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
+		process.env.COMMON_ORDER_URL = process.env.COMMON_URL + process.env.ORDER_ENDPOINT;
+		process.env.COMMON_PRODUCT_URL = process.env.COMMON_URL + process.env.PRODUCT_ENDPOINT;
+		process.env.COMMON_PRICELIST_URL = process.env.COMMON_URL + process.env.PRICELIST_ENDPOINT;
+		process.env.COMMON_ORDER_ITEM_URL = process.env.COMMON_URL + process.env.ORDER_ITEM_ENDPOINT;
+		process.env.COMMON_ASSET_URL = process.env.COMMON_URL + process.env.ASSET_ENDPOINT;
+		process.env.COMMON_PRICING_VARIABLE_URL = process.env.COMMON_URL + process.env.PRICING_VARIABLE_ENDPOINT;
+	}
 	// soql query Fields(Standard)
 	//  query?q=SELECT+Fields(Standard)+FROM+vlocity_cmt__PricingVariable__c
 	// vlocity_cmt__Discount__c
