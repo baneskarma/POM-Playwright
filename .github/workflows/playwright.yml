@@ -65,13 +65,13 @@ jobs:
             AUTHORIZATION_ENDPOINT: ${{ secrets.AUTHORIZATION_ENDPOINT }}
             TOKEN_ENDPOINT: ${{ secrets.TOKEN_ENDPOINT }}
 
-            COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ACCOUNT_ENDPOINT }}
-            COMMON_ORDER_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ORDER_ENDPOINT }}
-            COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRODUCT_ENDPOINT }}
-            COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRICELIST_ENDPOINT }}
-            COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ORDER_ITEM_ENDPOINT }}
-            COMMON_ASSET_URL: ${{ secrets.COMMON_URL }} + ${{ vars.ASSET_ENDPOINT }}
-            COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }} + ${{ vars.PRICING_VARIABLE_ENDPOINT }}
+            COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}
+            COMMON_ORDER_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}
+            COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}
+            COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}
+            COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}
+            COMMON_ASSET_URL: ${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}
+            COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}
 
       # - name: Upload Allure Results
       # uses: actions/upload-artifact@v4

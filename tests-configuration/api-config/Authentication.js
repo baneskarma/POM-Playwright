@@ -42,8 +42,8 @@ function createServer() {
 	if ( isCI ) {
 		// if key and cert files are encoded in .txt extension use this:
 		options = {
-			key: Buffer.from( process.env.SSL_KEY, 'base64' ).toString(), // Decode the key
-			cert: Buffer.from( process.env.SSL_CERT, 'base64' ).toString(), // Decode the certificate
+			key: Buffer.from( process.env.SSL_KEY, 'base64' ).toString(),
+			cert: Buffer.from( process.env.SSL_CERT, 'base64' ).toString(),
 		};
 	} else {
 		// if key and cert files are NOT encoded from the .pem extension use this:
