@@ -97,6 +97,9 @@ export const getAccessToken = async () => {
 	const tokenUrl = sfUrl + process.env.TOKEN_ENDPOINT;
 
 	// set environment variables
+	console.log( 'AUTHENTICATION' );
+	console.log( process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT );
+	console.log( process.env.COMMON_ACCOUNT_URL );
 	process.env.COMMON_ACCOUNT_URL = process.env.COMMON_URL + process.env.ACCOUNT_ENDPOINT;
 	process.env.COMMON_ORDER_URL = process.env.COMMON_URL + process.env.ORDER_ENDPOINT;
 	process.env.COMMON_PRODUCT_URL = process.env.COMMON_URL + process.env.PRODUCT_ENDPOINT;
