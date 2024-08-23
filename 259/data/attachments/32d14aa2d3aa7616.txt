@@ -1,0 +1,16 @@
+Account creation failed: ExpectError: expect(received).toBeTruthy()
+
+Received: false
+    at /home/runner/work/POM-Playwright/POM-Playwright/api-pages/verifications/Verifications.js:24:28
+    at Function.step (/home/runner/work/POM-Playwright/POM-Playwright/node_modules/allure-playwright/src/helpers.ts:21:17)
+    at Verifications.verifyResponse (/home/runner/work/POM-Playwright/POM-Playwright/api-pages/verifications/Verifications.js:23:16)
+    at /home/runner/work/POM-Playwright/POM-Playwright/api-pages/accounts-api-page/CreateAccount.js:55:30
+    at CreateAccount.newAccount (/home/runner/work/POM-Playwright/POM-Playwright/api-pages/accounts-api-page/CreateAccount.js:27:3)
+    at /home/runner/work/POM-Playwright/POM-Playwright/tests/api-tests/IPhone7ToConsumerB2C.spec.js:53:3 {
+  matcherResult: {
+    message: '\x1B[2mexpect(\x1B[22m\x1B[31mreceived\x1B[39m\x1B[2m).\x1B[22mtoBeTruthy\x1B[2m()\x1B[22m\n' +
+      '\n' +
+      'Received: \x1B[31mfalse\x1B[39m',
+    pass: false
+  }
+}
