@@ -1,0 +1,7 @@
+CREATE ACCOUNT API
+00D7a000000AbY0!AQEAQJAT9hYumWfxcSjmxRJvD3lLUfrM2Br2Hlj4box5Q2WGeLSh9fPWWVsNPknGStrZsExgUgMNpc4rvz0Wq3MlNSFfXuY4
+https://seavus-testing-vlocity--vlocitysbx.sandbox.my.salesforce.com/services/data/v58.0/sobjects/Account/
+Response from creating account is Success: { id: '0019O00000VkLR0QAN', success: true, errors: [] }
+Response from creating order is Success: { id: '8019O00000VkcV5QAJ', success: true, errors: [] }
+Response from adding item to order is Success: { id: '8029O000007SuijQAC', success: true, errors: [] }
+Response from creating asset is Success: { id: '02i9O0000037PcfQAE', success: true, errors: [] }
