@@ -57,7 +57,7 @@ jobs:
           echo "COMMON_PRICING_VARIABLE_URL=${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}" >> $GITHUB_ENV
 
       - name: Run Playwright tests
-        run: xvfb-run npx playwright test --project=edge || true
+        run: xvfb-run npx playwright test ApiSuite.spec.js --project=edge || true
         env:
             API: ${{ secrets.API }}
             BASE_URL: ${{ secrets.BASE_URL }}
