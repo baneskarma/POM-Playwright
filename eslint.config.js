@@ -148,7 +148,7 @@ export default [
 			'@typescript-eslint/naming-convention': [
 				'error',
 				{
-					selector: ['function', 'method', 'variable'],
+					selector: ['function', 'method', 'variable', 'parameter'],
 					format: ['camelCase'],
 					// leadingUnderscore: 'allow',
 					// trailingUnderscore: 'allow',

@@ -75,13 +75,6 @@ jobs:
             AUTHORIZATION_ENDPOINT: ${{ secrets.AUTHORIZATION_ENDPOINT }}
             TOKEN_ENDPOINT: ${{ secrets.TOKEN_ENDPOINT }}
 
-            # COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}
-            # COMMON_ORDER_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}
-            # COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}
-            # COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}
-            # COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}
-            # COMMON_ASSET_URL: ${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}
-            # COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}
             COMMON_ACCOUNT_URL: ${{ env.COMMON_ACCOUNT_URL }}
             COMMON_ORDER_URL: ${{ env.COMMON_ORDER_URL }}
             COMMON_PRODUCT_URL: ${{ env.COMMON_PRODUCT_URL }}
@@ -151,24 +144,3 @@ jobs:
 
       # - name: Open Allure Report
       #   run: allure open allure-report
-
-  # allure-report:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   needs: test
-  #   continue-on-error: true
-  #   steps:
-  #     - name: Install Allure CLI
-  #       run: npm install -g allure-commandline --save-dev
-
-  #     - name: Download Playwright report artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: playwright-report
-  #         path: allure-report/
-
-  #     - name: Generate Allure Report
-  #       run: allure generate allure-results --clean -o allure-report
-
-  #     - name: Open Allure Report
-  #       run: allure open allure-report

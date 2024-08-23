@@ -213,10 +213,7 @@ export const getAccessToken = async () => {
 			const accessToken = await data.access_token;
 			process.env.ACCESS_TOKEN = accessToken;
 			console.log( 'SF Token: ' + accessToken );
-			core.setOutput( 'ACCESS_TOKEN', accessToken );
-			// if (isCI) {
-			// 	core.setOutput('ACCESS_TOKEN', accessToken);
-			// }
+			// core.setOutput( 'ACCESS_TOKEN', accessToken );
 		} catch ( error ) {
 			console.error( 'Error in token exchange:', error );
 			throw error;

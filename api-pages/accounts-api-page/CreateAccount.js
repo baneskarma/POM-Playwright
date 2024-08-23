@@ -28,10 +28,7 @@ export class CreateAccount {
 			let response;
 			let accountUrl;
 			let accountData;
-			const accessToken = process.env.ACCESS_TOKEN || core.getInput( 'ACCESS_TOKEN' );
-			console.log( 'CREATE ACCOUNT API' );
-			console.log( accessToken );
-			console.log( process.env.COMMON_ACCOUNT_URL );
+			// const accessToken = process.env.ACCESS_TOKEN || core.getInput('ACCESS_TOKEN');
 
 			await allure.step( 'Store Account Data', async () => {
 				accountData = {
@@ -43,7 +40,7 @@ export class CreateAccount {
 			try {
 				response = await this.request.post( process.env.COMMON_ACCOUNT_URL, {
 					headers: {
-						Authorization: `Bearer ${accessToken}`,
+						Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
 						'Content-Type': 'application/json',
 					},
 					data: JSON.stringify( accountData ),
