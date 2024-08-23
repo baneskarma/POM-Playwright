@@ -46,6 +46,16 @@ jobs:
       # - name: Install Allure CLI
       #   run: npm install -g allure-commandline --save-dev
 
+      - name: Set concatenated variables
+        run: |
+          echo "COMMON_ACCOUNT_URL=${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ORDER_URL=${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRODUCT_URL=${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRICELIST_URL=${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ORDER_ITEM_URL=${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ASSET_URL=${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRICING_VARIABLE_URL=${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}" >> $GITHUB_ENV
+
       - name: Run Playwright tests
         run: xvfb-run npx playwright test --project=edge || true
         env:
@@ -65,13 +75,21 @@ jobs:
             AUTHORIZATION_ENDPOINT: ${{ secrets.AUTHORIZATION_ENDPOINT }}
             TOKEN_ENDPOINT: ${{ secrets.TOKEN_ENDPOINT }}
 
-            COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}
-            COMMON_ORDER_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}
-            COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}
-            COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}
-            COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}
-            COMMON_ASSET_URL: ${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}
-            COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}
+            # COMMON_ACCOUNT_URL: ${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}
+            # COMMON_ORDER_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}
+            # COMMON_PRODUCT_URL: ${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}
+            # COMMON_PRICELIST_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}
+            # COMMON_ORDER_ITEM_URL: ${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}
+            # COMMON_ASSET_URL: ${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}
+            # COMMON_PRICING_VARIABLE_URL: ${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}
+            COMMON_ACCOUNT_URL: ${{ env.COMMON_ACCOUNT_URL }}
+            COMMON_ORDER_URL: ${{ env.COMMON_ORDER_URL }}
+            COMMON_PRODUCT_URL: ${{ env.COMMON_PRODUCT_URL }}
+            COMMON_PRICELIST_URL: ${{ env.COMMON_PRICELIST_URL }}
+            COMMON_ORDER_ITEM_URL: ${{ env.COMMON_ORDER_ITEM_URL }}
+            COMMON_ASSET_URL: ${{ env.COMMON_ASSET_URL }}
+            COMMON_PRICING_VARIABLE_URL: ${{ env.COMMON_PRICING_VARIABLE_URL }}
+
 
       # - name: Upload Allure Results
       # uses: actions/upload-artifact@v4
