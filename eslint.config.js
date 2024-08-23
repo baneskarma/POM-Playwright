@@ -54,7 +54,7 @@ export default [
 
 	// Shared configuration for both environments
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', 'tests-configuration/TestsConfig.mjs'],
 
 		languageOptions: {
 			ecmaVersion: 12,
@@ -148,7 +148,7 @@ export default [
 			'@typescript-eslint/naming-convention': [
 				'error',
 				{
-					selector: ['function', 'method', 'variable'],
+					selector: ['function', 'method', 'variable', 'parameter'],
 					format: ['camelCase'],
 					// leadingUnderscore: 'allow',
 					// trailingUnderscore: 'allow',

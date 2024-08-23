@@ -1,6 +1,5 @@
 import { allure } from 'allure-playwright';
 import { homePage, vlocityProductConsole } from '../../tests-configuration/TestsConfig.mjs';
-//import { homePage, vlocityProductConsole } from '../tests-configuration/Fixtures.js';
 import { expect, test } from '@playwright/test';
 
 /**

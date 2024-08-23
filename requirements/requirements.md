@@ -74,7 +74,7 @@
    - **Product Name**: "Free National Data - 100GB"
    - **Product Name**: "Free 100 SMS & MMS"
 
-## 3. Development Dependencies
+## 3. Dependencies
 
 ### 3.1. Dependencies for prettier and eslint.
 
@@ -126,6 +126,12 @@
    - npm install husky --save-dev
    - npx husky-init
 
+### 3.3. actions/core
+1. Core functions for setting results, logging, registering secrets and exporting variables across actions.
+    - We need this to use environment variables that are created at runtime.
+    - npm install @actions/core
+
+
 ## 4. Custom Shortcuts
 
 ### 4.1. Lint current file
@@ -136,6 +142,7 @@
 -  Command: ctrl + p ctrl + l
 
 ## 5. Self Signed Certificate
+### 5.1. create cert.pem and key.pem files
 - Command: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nodes
    - Use the bash command in a folder where is save to make these files. Preferably in a folder outside this project.
 - Explanation: 
@@ -154,3 +161,10 @@
    4.	Sets the certificate's validity to 10 years.
    5.	Does not encrypt the private key with a passphrase
 
+### 5.2. Encode the files for CI usage
+- To use the certificate and key files in a CI environment we should encode them.
+- Encoding transforms the binary data into a text representation that can be safely stored and transmitted. Encryption scrambles the data to make it unreadable without a decryption key. SHA256 is a one way encryption which cannot be decrypted.
+- commands (use the commands in the folder where the key.pem and cert.pem files are stored):
+    - openssl base64 -in key.pem -out key.txt
+    - openssl base64 -in cert.pem -out cert.txt
+    - use the encoded content of the files in your CI environment secrets.

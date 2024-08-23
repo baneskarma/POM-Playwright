@@ -5,7 +5,7 @@ on:
   workflow_dispatch: # Trigger the workflow manually
 
   schedule:
-    - cron: "30 9 * * 0-4"
+    - cron: "30 9 * * 1-5"
 
   push:
     branches: [blagoja, main]
@@ -17,6 +17,7 @@ jobs:
   test:
     timeout-minutes: 20
     runs-on: ubuntu-latest
+    environment: sandbox
     # needs: setup
     steps:
       # - name: Install Allure
@@ -45,8 +46,18 @@ jobs:
       # - name: Install Allure CLI
       #   run: npm install -g allure-commandline --save-dev
 
+      - name: Set concatenated variables
+        run: |
+          echo "COMMON_ACCOUNT_URL=${{ secrets.COMMON_URL }}${{ vars.ACCOUNT_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ORDER_URL=${{ secrets.COMMON_URL }}${{ vars.ORDER_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRODUCT_URL=${{ secrets.COMMON_URL }}${{ vars.PRODUCT_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRICELIST_URL=${{ secrets.COMMON_URL }}${{ vars.PRICELIST_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ORDER_ITEM_URL=${{ secrets.COMMON_URL }}${{ vars.ORDER_ITEM_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_ASSET_URL=${{ secrets.COMMON_URL }}${{ vars.ASSET_ENDPOINT }}" >> $GITHUB_ENV
+          echo "COMMON_PRICING_VARIABLE_URL=${{ secrets.COMMON_URL }}${{ vars.PRICING_VARIABLE_ENDPOINT }}" >> $GITHUB_ENV
+
       - name: Run Playwright tests
-        run: xvfb-run npx playwright test TestSuite.spec.js --project=chromium || true
+        run: xvfb-run npx playwright test ApiSuite.spec.js --project=edge || true
         env:
             API: ${{ secrets.API }}
             BASE_URL: ${{ secrets.BASE_URL }}
@@ -58,8 +69,19 @@ jobs:
 
             SF_USERNAME: ${{ secrets.SF_USERNAME }}
             SF_PASSWORD: ${{ secrets.SF_PASSWORD }}
-            # KEY_PEM_PATH: ${{ secrets.KEY_PEM_PATH }}
-            # CERT_PEM_PATH: ${{ secrets.CERT_PEM_PATH }}
+            SSL_KEY: ${{ secrets.SSL_KEY }}
+            SSL_CERT: ${{ secrets.SSL_CERT }}
+
+            AUTHORIZATION_ENDPOINT: ${{ secrets.AUTHORIZATION_ENDPOINT }}
+            TOKEN_ENDPOINT: ${{ secrets.TOKEN_ENDPOINT }}
+
+            COMMON_ACCOUNT_URL: ${{ env.COMMON_ACCOUNT_URL }}
+            COMMON_ORDER_URL: ${{ env.COMMON_ORDER_URL }}
+            COMMON_PRODUCT_URL: ${{ env.COMMON_PRODUCT_URL }}
+            COMMON_PRICELIST_URL: ${{ env.COMMON_PRICELIST_URL }}
+            COMMON_ORDER_ITEM_URL: ${{ env.COMMON_ORDER_ITEM_URL }}
+            COMMON_ASSET_URL: ${{ env.COMMON_ASSET_URL }}
+            COMMON_PRICING_VARIABLE_URL: ${{ env.COMMON_PRICING_VARIABLE_URL }}
 
 
       # - name: Upload Allure Results
@@ -122,24 +144,3 @@ jobs:
 
       # - name: Open Allure Report
       #   run: allure open allure-report
-
-  # allure-report:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 5
-  #   needs: test
-  #   continue-on-error: true
-  #   steps:
-  #     - name: Install Allure CLI
-  #       run: npm install -g allure-commandline --save-dev
-
-  #     - name: Download Playwright report artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: playwright-report
-  #         path: allure-report/
-
-  #     - name: Generate Allure Report
-  #       run: allure generate allure-results --clean -o allure-report
-
-  #     - name: Open Allure Report
-  #       run: allure open allure-report

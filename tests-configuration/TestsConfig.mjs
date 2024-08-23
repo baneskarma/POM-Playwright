@@ -30,9 +30,9 @@ export const beforeAllTests = async () => {
 	// set browser
 	browser = await chromium.launch({
 		headless: false,
-		ignoreDefaultArgs: ['--enable-features=NetworkService'],
-		args: ['--disable-popup-blocking'],
-		permissions: ['geolocation'],
+		ignoreDefaultArgs: [ '--enable-features=NetworkService' ],
+		args: [ '--disable-popup-blocking' ],
+		permissions: [ 'geolocation' ],
 	});
 
 	// set browser context
@@ -53,12 +53,12 @@ export const beforeAllTests = async () => {
 
 	// set objects of classes
 
-	loginPage = new LoginPage(page);
-	homePage = new HomePage(page);
-	createAccount = new CreateAccount(page);
-	updateAccount = new UpdateAccount(page);
-	createOrder = new CreateOrder(page);
-	vlocityProductConsole = new VlocityProductConsole(page);
+	loginPage = new LoginPage( page );
+	homePage = new HomePage( page );
+	createAccount = new CreateAccount( page );
+	updateAccount = new UpdateAccount( page );
+	createOrder = new CreateOrder( page );
+	vlocityProductConsole = new VlocityProductConsole( page );
 
 	//return {page, context};
 };
@@ -71,14 +71,7 @@ export const beforeAllTests = async () => {
  */
 export const beforeEachTest = async () => {
 	//export async function beforeEachTest() {
-	// const isGitHubActions = process.env.CI === 'true';
-
-	// const username = isGitHubActions ? '${{ secrets.SFUSERNAME }}' : process.env.sfUsername;
-
-	// const password = isGitHubActions ? '${{ secrets.SFPASSWORD }}' : process.env.sfPassword;
-
-	// await loginPage.login(username, password, false);
-	await loginPage.login(process.env.SF_USERNAME, process.env.SF_PASSWORD, false);
+	await loginPage.login( process.env.SF_USERNAME, process.env.SF_PASSWORD, false );
 };
 
 /**
