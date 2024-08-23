@@ -157,12 +157,12 @@ export const getAccessToken = async () => {
 			const advanceButtonLocator = '//button[@id="details-button"]';
 			await expect( page.locator( advanceButtonLocator ) ).toBeVisible();
 			const advanceButton = page.locator( advanceButtonLocator );
-			if ( advanceButton ) {
-				await advanceButton.click( advanceButton );
-				const proceed = page.locator( '//a[@id="proceed-link"]' );
-				await proceed.click();
-				// }
-			}
+			// if ( advanceButton ) {
+			await advanceButton.click( advanceButton );
+			const proceed = page.locator( '//a[@id="proceed-link"]' );
+			await proceed.click();
+			// }
+			// }
 		} catch ( error ) {
 			console.error( 'Error in UI:', error );
 			throw error;

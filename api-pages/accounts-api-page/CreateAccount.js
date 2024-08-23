@@ -29,6 +29,9 @@ export class CreateAccount {
 			let accountUrl;
 			let accountData;
 			const accessToken = process.env.ACCESS_TOKEN || core.getInput( 'ACCESS_TOKEN' );
+			console.log( 'CREATE ACCOUNT API' );
+			console.log( accessToken );
+			console.log( process.env.COMMON_ACCOUNT_URL );
 
 			await allure.step( 'Store Account Data', async () => {
 				accountData = {
