@@ -1,3 +1,0 @@
-CREATE ACCOUNT API
-00D7a000000AbY0!AQEAQHETo.Em3KZ2Fpa8WixCLDeU7M01UU27C92g4pcUr3MYYa.yH2Pw63_euhIUT9BbzDvfhJJVopV2eOc9EavgxaeDQZUn
-https://seavus-testing-vlocity--vlocitysbx.sandbox.my.salesforce.com/services/data/v58.0/undefined
