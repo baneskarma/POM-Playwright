@@ -1,4 +1,0 @@
-Response from creating account is Success: { id: '0019O00000XIs3nQAD', success: true, errors: [] }
-Response from creating order is Success: { id: '8019O00000XIszpQAD', success: true, errors: [] }
-Response from adding item to order is Success: { id: '8029O0000088MYHQA2', success: true, errors: [] }
-Response from creating asset is Success: { id: '02i9O000003dcDNQAY', success: true, errors: [] }
