@@ -4,5 +4,5 @@
 /playwright/.cache/
 /allure-report/
 /allure-results/
-/allure-videos/
+/videos/
 /tests-configuration/environments/

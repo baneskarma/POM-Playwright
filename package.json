@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "api-suite": "npx playwright test ApiSuite.spec.js --project=edge",
-    "test-suite": "npx playwright test TestSuite.spec.js --project=edge",
+    "ui-suite": "npx playwright test TestSuite.spec.js --project=edge",
+    "hybrid-suite": "npx playwright test HybridSuite.spec.js --project=edge",
+    "project": "npx playwright test --project=edge",
     "api-ui": "npx playwright test ApiSuite.spec.js --project=edge --ui",
     "test-ui": "npx playwright test TestSuite.spec.js --project=edge --ui",
     "lint-project": "npx eslint .",
@@ -41,6 +43,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.10.1",
+    "chokidar": "^4.0.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "opener": "^1.5.2",

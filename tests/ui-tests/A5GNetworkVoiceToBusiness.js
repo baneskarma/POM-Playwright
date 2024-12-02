@@ -1,5 +1,5 @@
 import { homePage, createAccount, createOrder } from '../../tests-configuration/TestsConfig.mjs';
-import { expect, test } from '@playwright/test';
+import { test } from '@playwright/test';
 import { allure } from 'allure-playwright';
 
 //import { test, expect } from "../tests-configuration/Fixtures.mjs"

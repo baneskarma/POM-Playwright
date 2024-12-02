@@ -392,13 +392,13 @@ export class CreateOrder {
 				await expect( this.orderAccount ).toBeVisible();
 			});
 
-			await allure.step( 'Verify asset menagment is visible', async () => {
+			await allure.step( 'Verify asset management is visible', async () => {
 				let assetManagement = this.newPage.locator( this.assetManagement );
 				await assetManagement.scrollIntoViewIfNeeded();
 				await expect( assetManagement ).toBeVisible();
 			});
 
-			await allure.step( 'Verify asset menagment is expanded', async () => {
+			await allure.step( 'Verify asset management is expanded', async () => {
 				let assetManagementNotExpanded = this.newPage.locator( this.assetManagementNotExpanded );
 				let assetManagementExpanded = this.newPage.locator( this.assetManagementExpanded );
 				if ( ( await assetManagementNotExpanded.isVisible() ) === true ) {
