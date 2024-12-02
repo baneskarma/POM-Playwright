@@ -145,7 +145,7 @@
 ### 5.1. create cert.pem and key.pem files
 - Command: openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 3650 -nodes
    - Use the bash command in a folder where is save to make these files. Preferably in a folder outside this project.
-- Explanation: 
+- Explanation:
    -	openssl: This is the command-line tool you're using (OpenSSL).
    - 	req: This subcommand is used for generating certificate signing requests (CSRs) and self-signed certificates.
    -	-x509: This option tells OpenSSL to generate a self-signed certificate directly instead of a CSR.

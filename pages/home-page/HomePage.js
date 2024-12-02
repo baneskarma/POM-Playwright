@@ -18,7 +18,7 @@ export class HomePage {
 	}
 
 	/**
-	 * <b>[Method]</b> - Check the homepage<br>
+	 * **[Method]** - Check the homepage<br>
 	 * <br>
 	 * <i>Method functionality:</i><br>
 	 * This functionality checks the homepage, and if it is not the app we want, it goes to the desired app. <br>
@@ -39,12 +39,12 @@ export class HomePage {
 				});
 			}
 			await this.page.waitForLoadState( 'domcontentloaded' );
-			await expect( this.page ).toHaveTitle( 'Recently Viewed | Orders | Salesforce' );
+			await expect( this.page ).toHaveTitle( 'Home | Salesforce' ); //'Recently Viewed | Orders | Salesforce'
 		});
 	}
 
 	/**
-	 * <b>[Method]</b> - go to tab(page)<br>
+	 * **[Method]** - go to tab(page)<br>
 	 * <br>
 	 * <i>Method functionality:</i><br>
 	 * This functionality navigates to the tab(page) we want. <br>
@@ -59,7 +59,7 @@ export class HomePage {
 				this.tabLocator = this.page.getByRole( 'option', { name: tabName });
 				await this.tabLocator.click();
 			} else {
-				this.tabLocator = this.page.getByRole( 'link', { name: tabName });
+				this.tabLocator = this.page.locator( "//a[@title='" + tabName + "']" );
 				await this.tabLocator.click();
 			}
 			await this.page.waitForLoadState( 'domcontentloaded' );
@@ -67,7 +67,7 @@ export class HomePage {
 	}
 
 	/**
-	 * <b>[Method]</b> - verify the title of the page<br>
+	 * **[Method]** - verify the title of the page<br>
 	 * <br>
 	 * <i>Method functionality:</i><br>
 	 * This functionality verifies the title of the current page. <br>
@@ -81,14 +81,27 @@ export class HomePage {
 	}
 
 	/**
-	 * <b>[Method]</b> - Change the frame by index<br>
-	 * <br>
+	 * **[Method]** - Change the frame by index
+	 *
 	 * <i>Method functionality:</i><br>
-	 * This functionality changes the frame we want by index. <br>
+	 * This functionality changes the frame we want by index.
 	 * <br>
 	 * @param {number} frameIndex - The title of the page.
 	 */
 	async changeFrame( frameIndex ) {
 		this.frame = await this.page.frames().slice( frameIndex )[0];
+	}
+
+	/**
+	 * **[Method]** - Refresh the browser
+	 *
+	 * *Method functionality*:
+	 * This functionality refreshes the browser and waits for the content to load.
+	 */
+	async refreshPage() {
+		await allure.step( 'Refresh browser', async () => {
+			await this.page.reload();
+			await this.page.waitForLoadState( 'load' );
+		});
 	}
 }

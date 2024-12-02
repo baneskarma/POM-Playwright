@@ -15,7 +15,7 @@ test.beforeAll( beforeAllTests );
 test.beforeEach( beforeEachTest );
 test.afterAll( afterAllTests );
 
-test.describe( 'Test Suite', () => {
+test.describe( 'UI Test Suite', () => {
 	// zeroStepDemo();
 	order5GNetworkVoiceToBusiness();
 	add10PercentDiscount6MonthsToResidential();

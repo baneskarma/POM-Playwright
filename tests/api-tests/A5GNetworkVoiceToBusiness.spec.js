@@ -1,8 +1,7 @@
-import { expect, request, test } from '@playwright/test';
+import { test } from '@playwright/test';
 // import { getAccessToken } from '../../tests-configuration/api-config/authentication.js';
 import { allure } from 'allure-playwright';
 import { CreateAccount } from '../../api-pages/accounts-api-page/CreateAccount';
-import { UpdateAccount } from '../../api-pages/accounts-api-page/UpdateAccount';
 import { CreateOrder } from '../../api-pages/orders-api-page/CreateOrder';
 import { CreateAsset } from '../../api-pages/assets-api-page/CreateAsset';
 
@@ -10,7 +9,7 @@ import { CreateAsset } from '../../api-pages/assets-api-page/CreateAsset';
  * **[Test Method]** - Order '5G Network - Voice' through business account with B2B product price list
  *
  * *Test Method functionality* :
- * - This method has functionality to order product '5G Network - Voice' through business account with B2B product price list <br>
+ * - This method has functionality to order product '5G Network - Voice' through business account with B2B product price list through api requests and then check the created items in ui.
  *
  * *Steps of this scenario* :
  * 1. Create Business account and verify it's creation and data.
@@ -36,7 +35,6 @@ export async function order5GNetworkVoiceToBusiness() {
 
 		// Objects of pages
 		const createAccount = new CreateAccount( request );
-		const updateAccount = new UpdateAccount( request );
 		const createOrder = new CreateOrder( request );
 		const createAsset = new CreateAsset( request );
 

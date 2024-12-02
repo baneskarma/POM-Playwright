@@ -1,6 +1,5 @@
 import { expect, chromium } from '@playwright/test';
-import core from '@actions/core';
-//const core = require( '@actions/core' );
+// import core from '@actions/core';
 
 import express from 'express';
 import https from 'https';
@@ -63,7 +62,7 @@ function createServer() {
 	app.get( '/callback', ( req, res ) => {
 		authorizationCode = req.query.code;
 		// process.env.AUTHORIZATION_CODE = authorizationCode;
-		console.log( 'Authorization code received:', authorizationCode );
+		//console.log( 'Authorization code received:', authorizationCode );
 		//res.send('You can close this window.');
 		res.writeHead( 200, { 'Content-Type': 'text/plain' });
 		res.end( 'You can close this window now.' );
@@ -87,6 +86,13 @@ function createServer() {
  */
 export const getAccessToken = async () => {
 	//export async function  getAccessToken() {
+
+	// Locators
+	const username = '#username';
+	const password = '#password';
+	const loginButton = "//input[@id='Login']";
+	const advanceButtonLocator = '//button[@id="details-button"]';
+	const proceedLink = '//a[@id="proceed-link"]';
 
 	// Configuration
 	const clientId = process.env.CLIENT_ID;
@@ -122,10 +128,9 @@ export const getAccessToken = async () => {
 	// Discount kako da napravam na order
 	// Da napravam product kako Asset za account.
 	// Reccurring kako da proveram.
-	// Za hybrid kako ke bide scenarioto.
 
-	console.log( process.env.NODE_ENV );
-	console.log( sfUrl );
+	// console.log(process.env.NODE_ENV);
+	// console.log(sfUrl);
 
 	// Step 1:
 	let server = createServer();
@@ -139,7 +144,6 @@ export const getAccessToken = async () => {
 	await expect( async () => {
 		const authUrl = `${authorizationUrl}?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent( redirectUri )}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 		// let childProcess = await opener(authUrl);
-
 		// childProcess.on('exit', (code, signal) => {
 		// 	console.log(`Child process exited with code ${code} and signal ${signal}`);
 		// });
@@ -150,21 +154,18 @@ export const getAccessToken = async () => {
 			browser = await chromium.launch({ headless: false }); // { headless: true }
 			context = await browser.newContext();
 			page = await context.newPage();
-			// const redirectUrl = authResponse.url;
+
 			await page.goto( authUrl );
-			await page.fill( '#username', process.env.SF_USERNAME );
-			await page.fill( '#password', process.env.SF_PASSWORD );
-			await page.click( "//input[@id='Login']" );
-			// if (!isCI) {
-			const advanceButtonLocator = '//button[@id="details-button"]';
+			await page.fill( username, process.env.SF_USERNAME );
+			await page.fill( password, process.env.SF_PASSWORD );
+			await page.click( loginButton );
+
+			// Handle things in callback url for self signed certificate.
 			await expect( page.locator( advanceButtonLocator ) ).toBeVisible();
 			const advanceButton = page.locator( advanceButtonLocator );
-			// if ( advanceButton ) {
-			await advanceButton.click( advanceButton );
-			const proceed = page.locator( '//a[@id="proceed-link"]' );
+			await advanceButton.click();
+			const proceed = page.locator( proceedLink );
 			await proceed.click();
-			// }
-			// }
 		} catch ( error ) {
 			console.error( 'Error in UI:', error );
 			throw error;
@@ -212,7 +213,7 @@ export const getAccessToken = async () => {
 
 			const accessToken = await data.access_token;
 			process.env.ACCESS_TOKEN = accessToken;
-			console.log( 'SF Token: ' + accessToken );
+			// console.log('SF Token: ' + accessToken);
 			// core.setOutput( 'ACCESS_TOKEN', accessToken );
 		} catch ( error ) {
 			console.error( 'Error in token exchange:', error );
